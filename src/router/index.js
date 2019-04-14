@@ -30,7 +30,7 @@ export const constantRouterMap = [
     path: '/',
     component: Layout,
     redirect: '/dashboard',
-    name: '控制台',
+    name: 'dashboard',
     meta:{title:'控制台',icon:'form'},
     children: [{
       path: 'dashboard',
@@ -46,6 +46,10 @@ export const constantRouterMap = [
     meta: { title: '用户管理', icon: 'example' },
     children: [
       {
+        path:'/add',
+        meta:{title:'冻结用户管理',icon:'form'}
+      },
+      {
         path: '/audit',
         name: 'Aduit',
         component: () => import('@/views/table/index'),
@@ -53,7 +57,7 @@ export const constantRouterMap = [
       },
       {
         path: '/info',
-        name: 'Info',
+        name: 'info',
         component: () => import('@/views/table/index'),
         meta: { title: '用户信息', icon: 'table' },
         children: [
@@ -77,13 +81,24 @@ export const constantRouterMap = [
   {
     path: '/product',
     component: Layout,
+    name:'product',
     meta: { title: '商品管理', icon: 'example' },
     children: [
       {
         path: '/info',
         name: '商品管理',
         component: () => import('@/views/form/index'),
-        meta: { title: '商品管理', icon: 'form' }
+        meta: { title: '商品管理', icon: 'form' },
+        children:[
+          {
+            path:'/category',
+            meta:{title:'商品种类管理',icon:'form'},
+          },
+          {
+            path:'/category',
+            meta:{title:'删除商品',icon:'form'},
+          }
+        ]
       },
       {
         path: '/aduit',
@@ -110,6 +125,7 @@ export const constantRouterMap = [
   {
     path: '/order',
     component: Layout,
+    name:'order',
     meta: { title: '订单管理', icon: 'example' },
     children: [
       {
@@ -120,7 +136,7 @@ export const constantRouterMap = [
       },
       {
         path: '/solve',
-        name: '订单详情',
+        name: 'order',
         component: () => import('@/views/form/index'),
         meta: { title: '订单详情', icon: 'form' },
         children: [
@@ -142,74 +158,35 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/nested',
+    path: '/asset',
+    meta: {title:'资产管理',icon:'form'},
+    name: 'asset',
     component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
+    children:[{
+      path: '/detail',
+      name:'assetDetail',
+    }],
+  },
+  {
+    path: '/mall',
+    meta: {title:'商城管理',icon:'form'},
+    name: 'asset',
+    component: Layout,
+    children:[{
+      path: '/home',
+      name:'mallHome',
+      meta:{title:'商品主页管理',icon:'form'},
+      children:[
+        {
+        meta:{title:'商品种类管理',icon:'form'},
+        path:'/categories'
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'menu2' }
-      }
-    ]
+        meta:{title:'轮播图管理',icon:'form'},
+        path:'/carousel'
+      }]
+    }],
   },
-
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
-      }
-    ]
-  },
-
   { path: '*', redirect: '/404', hidden: true }
 ]
 
