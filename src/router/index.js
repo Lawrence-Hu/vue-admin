@@ -33,7 +33,7 @@ export const constantRouterMap = [
     name: 'dashboard',
     meta:{title:'控制台',icon:'form'},
     children: [{
-      path: 'dashboard',
+      path: '/dashboard',
       component: () => import('@/views/dashboard/index')
     }]
   },
@@ -46,29 +46,29 @@ export const constantRouterMap = [
     meta: { title: '用户管理', icon: 'example' },
     children: [
       {
-        path:'/add',
+        path:'/user/add',
         meta:{title:'冻结用户管理',icon:'form'}
       },
       {
-        path: '/audit',
+        path: '/user/audit',
         name: 'Aduit',
         component: () => import('@/views/table/index'),
         meta: { title: '用户权限', icon: 'table' }
       },
       {
-        path: '/info',
+        path: '/user/info',
         name: 'info',
         component: () => import('@/views/table/index'),
         meta: { title: '用户信息', icon: 'table' },
         children: [
           {
-            path:'/pending',
+            path:'/user/pending',
             name:'待处理',
            // component:() => import('@view/form/index'),
             meta:{title: '待处理',icon: 'form'}
           },
           {
-            path:'/handled',
+            path:'/user/handled',
             name:'已处理',
            // component:() => import('@view/form/index'),
             meta:{title: '已处理',icon: 'form'}
@@ -85,35 +85,35 @@ export const constantRouterMap = [
     meta: { title: '商品管理', icon: 'example' },
     children: [
       {
-        path: '/info',
+        path: '/product/info',
         name: '商品管理',
         component: () => import('@/views/form/index'),
         meta: { title: '商品管理', icon: 'form' },
         children:[
           {
-            path:'/category',
+            path:'/product/category',
             meta:{title:'商品种类管理',icon:'form'},
           },
           {
-            path:'/category',
+            path:'/product/delete',
             meta:{title:'删除商品',icon:'form'},
           }
         ]
       },
       {
-        path: '/aduit',
+        path: '/product/aduit',
         name: '商品认证',
         component: () => import('@/views/form/index'),
         meta: { title: '商品认证', icon: 'form' },
         children: [
           {
-            path:'/pending',
+            path:'/product/aduit/pending',
             name:'待处理',
            // component:() => import('@view/form/index'),
             meta:{title: '待处理',icon: 'form'}
           },
           {
-            path:'/handled',
+            path:'/product/aduit/handled',
             name:'已处理',
            // component:() => import('@view/form/index'),
             meta:{title: '已处理',icon: 'form'}
@@ -129,25 +129,25 @@ export const constantRouterMap = [
     meta: { title: '订单管理', icon: 'example' },
     children: [
       {
-        path: '/all',
+        path: '/order/all',
         name: '所有订单',
         component: () => import('@/views/form/index'),
         meta: { title: '所有订单', icon: 'form' }
       },
       {
-        path: '/solve',
+        path: '/order/solve',
         name: 'order',
         component: () => import('@/views/form/index'),
         meta: { title: '订单详情', icon: 'form' },
         children: [
           {
-            path:'/pending',
+            path:'/order/solve/pending',
             name:'待处理',
            // component:() => import('@view/form/index'),
             meta:{title: '待处理',icon: 'form'}
           },
           {
-            path:'/handled',
+            path:'/order/solve/handled',
             name:'已处理',
            // component:() => import('@view/form/index'),
             meta:{title: '已处理',icon: 'form'}
@@ -163,7 +163,7 @@ export const constantRouterMap = [
     name: 'asset',
     component: Layout,
     children:[{
-      path: '/detail',
+      path: '/asset/detail',
       name:'assetDetail',
     }],
   },
@@ -173,17 +173,17 @@ export const constantRouterMap = [
     name: 'asset',
     component: Layout,
     children:[{
-      path: '/home',
+      path: '/mall/home',
       name:'mallHome',
       meta:{title:'商品主页管理',icon:'form'},
       children:[
         {
         meta:{title:'商品种类管理',icon:'form'},
-        path:'/categories'
+        path:'/mall/categories'
       },
       {
         meta:{title:'轮播图管理',icon:'form'},
-        path:'/carousel'
+        path:'/mall/carousel'
       }]
     }],
   },
