@@ -31,7 +31,7 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/dashboard',
     name: '控制台',
-    hidden: true,
+    meta:{title:'控制台',icon:'form'},
     children: [{
       path: 'dashboard',
       component: () => import('@/views/dashboard/index')
@@ -90,6 +90,39 @@ export const constantRouterMap = [
         name: '商品认证',
         component: () => import('@/views/form/index'),
         meta: { title: '商品认证', icon: 'form' },
+        children: [
+          {
+            path:'/pending',
+            name:'待处理',
+           // component:() => import('@view/form/index'),
+            meta:{title: '待处理',icon: 'form'}
+          },
+          {
+            path:'/handled',
+            name:'已处理',
+           // component:() => import('@view/form/index'),
+            meta:{title: '已处理',icon: 'form'}
+          }
+        ]
+      }
+    ]
+  },
+  {
+    path: '/order',
+    component: Layout,
+    meta: { title: '订单管理', icon: 'example' },
+    children: [
+      {
+        path: '/all',
+        name: '所有订单',
+        component: () => import('@/views/form/index'),
+        meta: { title: '所有订单', icon: 'form' }
+      },
+      {
+        path: '/solve',
+        name: '订单详情',
+        component: () => import('@/views/form/index'),
+        meta: { title: '订单详情', icon: 'form' },
         children: [
           {
             path:'/pending',
