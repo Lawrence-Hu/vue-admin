@@ -51,13 +51,13 @@ export const constantRouterMap = [
       },
       {
         path: '/user/audit',
-        name: 'Aduit',
+        name: 'userAduit',
         component: () => import('@/views/table/index'),
         meta: { title: '用户权限', icon: 'table' }
       },
       {
         path: '/user/info',
-        name: 'info',
+        name: 'userInfo',
         component: () => import('@/views/table/index'),
         meta: { title: '用户信息', icon: 'table' },
         children: [
@@ -86,7 +86,7 @@ export const constantRouterMap = [
     children: [
       {
         path: '/product/info',
-        name: '商品管理',
+        name: 'productInfo',
         component: () => import('@/views/form/index'),
         meta: { title: '商品管理', icon: 'form' },
         children:[
@@ -101,20 +101,20 @@ export const constantRouterMap = [
         ]
       },
       {
-        path: '/product/aduit',
-        name: '商品认证',
+        path: '/product/audit',
+        name: 'productAdudit',
         component: () => import('@/views/form/index'),
         meta: { title: '商品认证', icon: 'form' },
         children: [
           {
-            path:'/product/aduit/pending',
-            name:'待处理',
+            path:'/product/audit/pending',
+            name:'productAuditPending',
            // component:() => import('@view/form/index'),
             meta:{title: '待处理',icon: 'form'}
           },
           {
-            path:'/product/aduit/handled',
-            name:'已处理',
+            path:'/product/audit/handled',
+            name:'productAuditHandled',
            // component:() => import('@view/form/index'),
             meta:{title: '已处理',icon: 'form'}
           }
@@ -130,25 +130,25 @@ export const constantRouterMap = [
     children: [
       {
         path: '/order/all',
-        name: '所有订单',
+        name: 'orderAll',
         component: () => import('@/views/form/index'),
         meta: { title: '所有订单', icon: 'form' }
       },
       {
         path: '/order/solve',
-        name: 'order',
+        name: 'orderSolve',
         component: () => import('@/views/form/index'),
         meta: { title: '订单详情', icon: 'form' },
         children: [
           {
             path:'/order/solve/pending',
-            name:'待处理',
+            name:'orderSolvePending',
            // component:() => import('@view/form/index'),
             meta:{title: '待处理',icon: 'form'}
           },
           {
             path:'/order/solve/handled',
-            name:'已处理',
+            name:'orderSolveHandled',
            // component:() => import('@view/form/index'),
             meta:{title: '已处理',icon: 'form'}
           }
@@ -170,7 +170,7 @@ export const constantRouterMap = [
   {
     path: '/mall',
     meta: {title:'商城管理',icon:'form'},
-    name: 'asset',
+    name: 'mall',
     component: Layout,
     children:[{
       path: '/mall/home',
