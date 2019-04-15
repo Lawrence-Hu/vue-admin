@@ -66,9 +66,9 @@ export default {
     this.fetchData()
   },
   methods: {
-    fetchData() {
+    fetchData() { 
       this.listLoading = true
-      getList().then(response => {
+      getList({'a':123}).then(response => {
         this.list = response.data.items
         this.listLoading = false
       })
