@@ -43,6 +43,7 @@ export const constantRouterMap = [
     component: Layout,
     name: 'user',
     meta: { title: '用户管理', icon: 'example' },
+    redirect:'/user/info',
     children: [
       {
         meta: { title: '用户信息管理', icon: 'table' },
@@ -52,31 +53,33 @@ export const constantRouterMap = [
       },
       {
         path:'/user/status',
+        name:'userStatus',
         component:()=>import('@/views/user/userStatus'),
         meta:{title:'冻结用户管理',icon:'form'}
       },
       {
         path: '/user/audit',
         name: 'userAduit',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/user/userAuth'),
         meta: { title: '用户权限', icon: 'table' }
       },
       {
         path: '/user/vertify',
         name: 'userVertify',
-        component: () => import('@/views/table/index'),
-        meta: { title: '用户审核', icon: 'table' },
+        meta:{title: '用户认证',icon: 'form'},
+        redirect:'/user/vertify/pending',
+        component:() => import('@/views/layout/components/AppMain'),
         children: [
           {
             path:'/user/vertify/pending',
             name:'待处理',
-           // component:() => import('@view/form/index'),
+            component: () => import('@/views/user/auditPending'),
             meta:{title: '待处理',icon: 'form'}
           },
           {
             path:'/user/vertify/handled',
             name:'已处理',
-           // component:() => import('@view/form/index'),
+            component: () => import('@/views/user/auditHandled'),
             meta:{title: '已处理',icon: 'form'}
           }
         ]

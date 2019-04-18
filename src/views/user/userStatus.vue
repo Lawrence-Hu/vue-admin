@@ -1,5 +1,9 @@
 <template>
     <div>
+      <div class="search" style="margin-top: 15px;width:30%;float:right;margin-right:11%">
+        <el-input v-model="input" style="width:75%;" placeholder="请输入内容"></el-input>
+        <el-button type="primary" icon="el-icon-search">搜索</el-button>
+      </div>
         <template>
             <el-table
                 :data="tableData5"
@@ -121,7 +125,10 @@
     width: 50%;
   }
 </style>
-
+    .search {
+    display: flex;
+    justify-content: space-around
+  }
 <script>
   export default {
     data() {
