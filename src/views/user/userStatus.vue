@@ -167,6 +167,7 @@
           shopId: '10333'
         }],
         dialogFormVisible: false,
+        input:'',
         form: {
           name: '',
           region: '',
