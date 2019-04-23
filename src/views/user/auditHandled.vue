@@ -33,32 +33,38 @@
                 @click="handleEdit(scope.$index, scope.row)">详情</el-button>    
                 <el-button
                 :type="scope.row.tag === '已通过' ? 'success' : 'danger'" size="medium"
-                disabled="disable">{{scope.row.tag}}</el-button>
-            </template>       
+                :disabled="true">{{scope.row.tag}}</el-button>
+            </template>      
             </el-table-column>
         </el-table>
     </template>
-    <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
-        <el-form :model="form" inline="true">
-            <div class="block" style="width:55%;float:right" >
-                <el-carousel trigger="click" height="240px" >
+    <el-dialog title="用户认证" :visible.sync="dialogFormVisible">
+        <el-form :model="form" :inline="true">
+            <div class="block" style="width:58%;float:right" >
+                <el-carousel trigger="click" height="250px" >
                     <el-carousel-item v-for="item in 4" :key="item">
                         <h3>{{ item }}</h3>
                     </el-carousel-item>
                 </el-carousel>
             </div>
-           <el-form-item label="姓名">
-                <el-input disabled="disable" v-model="form.name"></el-input>
+            <el-form-item label="认证Id" label-width="68px">
+                <el-input :disabled="true" v-model="form.name"></el-input>
+            </el-form-item>
+           <el-form-item label="姓名" label-width="68px">
+                <el-input  :disabled="true" v-model="form.name"></el-input>
             </el-form-item>
             <el-form-item label="身份证号">
-                <el-input disabled="disable" v-model="form.name"></el-input>
+                <el-input :disabled="true" v-model="form.name"></el-input>
             </el-form-item>
             <el-form-item label="当前住址">
-                <el-input disabled="disable" v-model="form.name"></el-input>
+                <el-input :disabled="true" v-model="form.name"></el-input>
             </el-form-item>
-            <el-form-item label="当前住址">
-                <el-input disabled="disable" v-model="form.name"></el-input>
+<<<<<<< HEAD
+=======
+            <el-form-item label="信息">
+                <el-input type="textarea" style ="width:250%;height:400%" :disabled="true" v-model="form.name"></el-input>
             </el-form-item>
+>>>>>>> 9b8860260e6072a903dd19110c4303db7e79c6df
         </el-form>
     </el-dialog>
 </div>
@@ -114,10 +120,13 @@ export default {
 }
 </script>
 <style >
-    .el-form--inline .el-form-item__label {
-    float: none;
-    width:68px;
-    display: inline-block;
-}
+  .el-input__inner{
+      height:43px;
+      width: 120%;
+  }
+ .el-textarea__inner{
+     padding:15px 15px;
+     height: 80px;
+ }  
 </style>
 
