@@ -28,64 +28,44 @@
             prop="address"
             label="详情">
             <template slot-scope="scope">
-                <el-button
-                size="medium"
-                @click="handleEdit(scope.$index, scope.row)">详情</el-button>
-                <el-button
-                size="medium"
-                type="danger"
-                @click="handleDelete(scope.$index, scope.row)">驳回</el-button>
-            </template>
-            </el-table-column>
-        </el-table>
-    </template>
-    <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
-        <el-form :model="form" inline="true">
-           <el-form-item label="活动名称">
-                <el-input v-model="form.name"></el-input>
+              <el-button
+              size="medium"
+              @click="handleEdit(scope.$index, scope.row)">详情</el-button>
+              <el-button
+              size="medium"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)">驳回</el-button>
+          </template>
+          </el-table-column>
+      </el-table>
+  </template>
+  <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+          <el-form :model="form" :inline="true">
+            <div class="block" style="width:58%;float:right" >
+                <el-carousel trigger="click" height="250px" >
+                    <el-carousel-item v-for="item in 4" :key="item">
+                        <h3>{{ item }}</h3>
+                    </el-carousel-item>
+                </el-carousel>
+            </div>
+            <el-form-item label="认证Id" label-width="68px">
+                <el-input :disabled="true" v-model="form.id"></el-input>
             </el-form-item>
-            <el-form-item label="活动区域">
-                <el-select v-model="form.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
+          <el-form-item label="姓名" label-width="68px">
+                <el-input  :disabled="true" v-model="form.name"></el-input>
             </el-form-item>
-            <el-form-item label="活动时间">
-                <el-col :span="11">
-                <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-                </el-col>
-                <el-col class="line" :span="2">-</el-col>
-                <el-col :span="11">
-                <el-time-picker type="fixed-time" placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
-                </el-col>
+            <el-form-item label="身份证号">
+                <el-input :disabled="true" v-model="form.creditId"></el-input>
             </el-form-item>
-            <el-form-item label="即时配送">
-                <el-switch v-model="form.delivery"></el-switch>
+            <el-form-item label="当前住址">
+                <el-input :disabled="true" v-model="form.address"></el-input>
             </el-form-item>
-            <el-form-item label="活动性质">
-                <el-checkbox-group v-model="form.type">
-                <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
-                <el-checkbox label="地推活动" name="type"></el-checkbox>
-                <el-checkbox label="线下主题活动" name="type"></el-checkbox>
-                <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
-                </el-checkbox-group>
-            </el-form-item>
-            <el-form-item label="特殊资源">
-                <el-radio-group v-model="form.resource">
-                <el-radio label="线上品牌商赞助"></el-radio>
-                <el-radio label="线下场地免费"></el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item label="活动形式">
-                <el-input type="textarea" v-model="form.desc"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="onSubmit">立即创建</el-button>
-                <el-button>取消</el-button>
+            <el-form-item label="备注">
+                <el-input type="textarea" style ="width:250%;height:400%"  v-model="form.comments"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer" style="margin-right:8%">
-            <el-button @click="dialogFormVisible = false">通过</el-button>
+            <el-button type="success" @click="open2()">通过</el-button>
             <el-button type="primary" @click="dialogFormVisible = false">驳回</el-button>
         </div>
     </el-dialog>
@@ -99,13 +79,10 @@ export default {
         formLabelWidth: '120px',
         form: {
             name: '',
-            region: '',
-            date1: '',
-            date2: '',
-            delivery: false,
-            type: [],
-            resource: '',
-            desc: ''
+            id: '',
+            creditId: '',
+            address: '',
+            comments: '',
         },
         tableData: [{
           date: '2016-05-02',
@@ -133,6 +110,24 @@ export default {
       },
       handleDelete(index, row) {
         console.log(index, row);
+      },
+      open2() {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+         this.dialogFormVisible=false;
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        }); 
       }
     }
 }

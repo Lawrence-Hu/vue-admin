@@ -59,12 +59,9 @@
             <el-form-item label="当前住址">
                 <el-input :disabled="true" v-model="form.name"></el-input>
             </el-form-item>
-<<<<<<< HEAD
-=======
             <el-form-item label="信息">
                 <el-input type="textarea" style ="width:250%;height:400%" :disabled="true" v-model="form.name"></el-input>
             </el-form-item>
->>>>>>> 9b8860260e6072a903dd19110c4303db7e79c6df
         </el-form>
     </el-dialog>
 </div>
@@ -119,7 +116,7 @@ export default {
     }
 }
 </script>
-<style >
+<style scoped>
   .el-input__inner{
       height:43px;
       width: 120%;

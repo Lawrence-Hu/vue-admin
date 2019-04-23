@@ -91,13 +91,14 @@ export const constantRouterMap = [
     path: '/product',
     component: Layout,
     name:'product',
+    redirect:'/product/info',
     meta: { title: '商品管理', icon: 'example' },
     children: [
       {
         path: '/product/info',
         name: 'productInfo',
-        component: () => import('@/views/form/index'),
-        meta: { title: '商品管理', icon: 'form' },
+        component: () => import('@/views/products/products'),
+        meta: { title: '所有商品', icon: 'form' },
         children:[
           {
             path:'/product/category',
