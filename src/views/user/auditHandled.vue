@@ -45,7 +45,7 @@
                     <el-carousel-item v-for="item in 4" :key="item">
                         <h3>{{ item }}</h3>
                     </el-carousel-item>
-                </el-carousel>
+                </el-carousel>  
             </div>
             <el-form-item label="认证Id" label-width="68px">
                 <el-input :disabled="true" v-model="form.name"></el-input>

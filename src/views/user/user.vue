@@ -1,5 +1,6 @@
 <template>
-    <div>
+<div>
+    <div  v-show="show">
      <div class="search" style="margin-top: 15px;width:30%;float:right;margin-right:11%">
       <el-input v-model="input" style="width:75%;" placeholder="请输入内容"></el-input>
       <el-button type="primary" icon="el-icon-search">搜索</el-button>
@@ -87,7 +88,7 @@
                 <el-input v-model="form.name" auto-complete="off"></el-input>
             </el-form-item>
             
-            <el-form-item label="是否实名" :label-width="formLabelWidth" style="">
+            <el-form-item label="是否实名" :label-width="formLabelWidth" style="float:right;margin-right:12%">
                 <el-select v-model="form.region" placeholder="请选择活动区域">
                 <el-option label="区域一" value="shanghai"></el-option>
                 <el-option label="区域二" value="beijing"></el-option>
@@ -101,7 +102,7 @@
                 </el-select>
             </el-form-item>
 
-            <el-form-item label="用户地址" :label-width="formLabelWidth"  style="float:right;margin-right:12%">
+            <el-form-item label="用户地址" :label-width="formLabelWidth"  style="float:left;">
                 <el-select v-model="form.region" placeholder="请选择活动区域">
                     <el-option label="区域一" value="shanghai"></el-option>
                     <el-option label="区域二" value="beijing"></el-option>
@@ -114,6 +115,24 @@
         </div>
         </el-dialog>
     </template>
+  </div>
+  <div v-show="!show" :show-indicator="false">
+      <mt-index-list>
+      <mt-index-section index="A">
+        <mt-cell title="Aaron"></mt-cell>
+        <mt-cell title="Alden"></mt-cell>
+        <mt-cell title="Austin"></mt-cell>
+      </mt-index-section>
+      <mt-index-section index="B">
+        <mt-cell title="Baldwin"></mt-cell>
+        <mt-cell title="Braden"></mt-cell>
+      </mt-index-section>
+      <mt-index-section index="Z">
+        <mt-cell title="Zack"></mt-cell>
+        <mt-cell title="Zane"></mt-cell>
+      </mt-index-section>
+    </mt-index-list>
+  </div>
   </div>
 </template>
 <style>
@@ -161,6 +180,7 @@
         }],
         input:'',
         pageNum:12,
+        show:true,
         dialogFormVisible: false,
         form: {
           name: '',
@@ -173,6 +193,13 @@
           desc: ''
         },
         formLabelWidth: '120px'
+      }
+    },
+    mounted: function(){
+		//可用于设置自适应屏幕，根据获得的可视宽度（兼容性）判断是否显示
+		let w = document.documentElement.offsetWidth || document.body.offsetWidth;
+      if(w < 1000){
+        this.show = false;
       }
     },
     methods: {
