@@ -172,6 +172,7 @@
         input:'',
         pageNum:12,
         show:true,
+        phtenvir:false,
         dialogFormVisible: false,
         form: {
           name: '',
@@ -189,6 +190,7 @@
 		let w = document.documentElement.offsetWidth || document.body.offsetWidth;
       if(w < 1000){
         this.show = false;
+        this.phtenvir =true;
       }
     },
     methods: {
@@ -213,6 +215,11 @@
             message: '已取消删除'
           });
         }); 
+      },
+      detailforMobile(item){
+        this.show=true
+        this.form=JSON.parse(JSON.stringify(item));
+        console.log(this.phone)
       }
     }
   }
