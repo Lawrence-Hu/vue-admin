@@ -72,41 +72,41 @@
         <!-- Form -->
         <el-dialog title="用户信息修改" :visible.sync="dialogFormVisible">
         <el-form :inline="true" :model="form">
-            <el-form-item label="姓名" :label-width="formLabelWidth" style="">
-                <el-input v-model="form.name" auto-complete="off" ></el-input>
+            <el-form-item label="姓名" :label-width="formLabelWidth" style="margin-right:3%">
+                <el-input v-model="form.name" auto-complete="off"  style="width:109%"></el-input>
             </el-form-item>
           
-            <el-form-item label="邮箱号" :label-width="formLabelWidth" style="float:right;margin-right:12%">
-                <el-input v-model="form.name" auto-complete="off"></el-input>
+            <el-form-item label="邮箱号" :label-width="formLabelWidth" style="">
+                <el-input v-model="form.name" auto-complete="off" style="width:109%"></el-input>
             </el-form-item>
             
-            <el-form-item label="手机号" :label-width="formLabelWidth" style="">
-                <el-input v-model="form.name" auto-complete="off"></el-input>
+            <el-form-item label="手机号" :label-width="formLabelWidth" style="margin-right:3%">
+                <el-input v-model="form.name" auto-complete="off" style="width:109%"></el-input>
             </el-form-item>
 
-            <el-form-item label="支付宝账号" :label-width="formLabelWidth" style="float:right;margin-right:12%">
-                <el-input v-model="form.name" auto-complete="off"></el-input>
+            <el-form-item label="支付宝账号" :label-width="formLabelWidth" style="">
+                <el-input v-model="form.name" auto-complete="off" style="width:109%"></el-input>
             </el-form-item>
             
-            <el-form-item label="是否实名" :label-width="formLabelWidth" style="float:right;margin-right:12%">
+            <el-form-item label="是否实名" :label-width="formLabelWidth" style="">
                 <el-select v-model="form.region" placeholder="请选择活动区域">
                 <el-option label="区域一" value="shanghai"></el-option>
                 <el-option label="区域二" value="beijing"></el-option>
                 </el-select>
             </el-form-item>
 
-            <el-form-item label="用户状态" :label-width="formLabelWidth" style="float:left;">
+            <el-form-item label="用户状态" :label-width="formLabelWidth" style="padding-right:1%">
                 <el-select v-model="form.region" placeholder="请选择活动区域">
                   <el-option label="区域一" value="shanghai"></el-option>
                   <el-option label="区域二" value="beijing"></el-option>
                 </el-select>
             </el-form-item>
 
-            <el-form-item label="用户地址" :label-width="formLabelWidth"  style="float:left;">
+            <el-form-item label="用户地址" :label-width="formLabelWidth"  style="">
                 <el-select v-model="form.region" placeholder="请选择活动区域">
                     <el-option label="区域一" value="shanghai"></el-option>
                     <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
+                </el-select>      
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer" style="clear:both;margin-right:12%">
@@ -135,7 +135,7 @@
   </div>
   </div>
 </template>
-<style>
+<style scoped>
   .search {
     display: flex;
     justify-content: space-around
@@ -157,6 +157,9 @@
     margin-right: 5%;
     margin-top: 32%
   }
+  .el-form--inline .el-form-item{
+      padding-right: 8%;
+  } 
 </style>
 
 <script>
