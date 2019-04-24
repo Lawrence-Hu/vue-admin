@@ -1,6 +1,5 @@
 <template>
-<div>
-    <div  v-show="show">
+    <div>
      <div class="search" style="margin-top: 15px;width:30%;float:right;margin-right:11%">
       <el-input v-model="input" style="width:75%;" placeholder="请输入内容"></el-input>
       <el-button type="primary" icon="el-icon-search">搜索</el-button>
@@ -115,25 +114,7 @@
         </div>
         </el-dialog>
     </template>
-  </div>
-  <div v-show="!show" :show-indicator="false">
-      <mt-index-list>
-      <mt-index-section index="A">
-        <mt-cell title="Aaron"></mt-cell>
-        <mt-cell title="Alden"></mt-cell>
-        <mt-cell title="Austin"></mt-cell>
-      </mt-index-section>
-      <mt-index-section index="B">
-        <mt-cell title="Baldwin"></mt-cell>
-        <mt-cell title="Braden"></mt-cell>
-      </mt-index-section>
-      <mt-index-section index="Z">
-        <mt-cell title="Zack"></mt-cell>
-        <mt-cell title="Zane"></mt-cell>
-      </mt-index-section>
-    </mt-index-list>
-  </div>
-  </div>
+  </div>   
 </template>
 <style scoped>
   .search {
@@ -184,6 +165,7 @@
         input:'',
         pageNum:12,
         show:true,
+        phtenvir:false,
         dialogFormVisible: false,
         form: {
           name: '',
@@ -203,6 +185,7 @@
 		let w = document.documentElement.offsetWidth || document.body.offsetWidth;
       if(w < 1000){
         this.show = false;
+        this.phtenvir =true;
       }
     },
     methods: {
@@ -227,6 +210,11 @@
             message: '已取消删除'
           });
         }); 
+      },
+      detailforMobile(item){
+        this.show=true
+        this.form=JSON.parse(JSON.stringify(item));
+        console.log(this.phone)
       }
     }
   }

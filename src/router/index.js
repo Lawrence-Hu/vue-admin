@@ -46,7 +46,7 @@ export const constantRouterMap = [
     redirect:'/user/info',
     children: [
       {
-        meta: { title: '用户信息管理', icon: 'table' },
+        meta: { title: '所有用户', icon: 'table' },
         name:'userInfo',
         path:'/user/info',
         component:()=>import('@/views/user/user')
@@ -99,20 +99,17 @@ export const constantRouterMap = [
         name: 'productInfo',
         component: () => import('@/views/products/products'),
         meta: { title: '所有商品', icon: 'form' },
-        children:[
-          {
-            path:'/product/category',
-            meta:{title:'商品种类管理',icon:'form'},
-          },
-          {
-            path:'/product/delete',
-            meta:{title:'删除商品',icon:'form'},
-          }
-        ]
+      },
+      {
+        path:'/product/category',
+        name: 'productCategory',
+        meta:{title:'商品种类管理',icon:'form'},
+        component: () => import('@/views/products/category'),
       },
       {
         path: '/product/audit',
         name: 'productAdudit',
+        redirect:'/product/audit/pending',
         component: () => import('@/views/form/index'),
         meta: { title: '商品认证', icon: 'form' },
         children: [
