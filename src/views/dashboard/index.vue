@@ -1,6 +1,5 @@
 <template>
    <div class="dashboard-editor-container">
-
     <panel-group/>
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
@@ -34,11 +33,6 @@ import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
 import TransactionTable from './components/TransactionTable'
 
-const lineChartData = {
-  newVisitis: {
-    expectedData: [150, 120, 161, 134, 105, 160, 165],
-  },
-}
 
 export default {
   name: 'DashboardAdmin',
@@ -51,15 +45,15 @@ export default {
   },
   data() {
     return {
-      name:'huchao',
-      token:'qwewqiroesdkljs',
-      roles:['admin','user'],
-      lineChartData: lineChartData.newVisitis
+    
     }
   },
-  methods: {
-
-  }
+  mounted:function(){
+      this.$store.dispatch('GetInfo').then(() => {
+      }).catch(()=>{
+        this.$router.push({ path: this.redirect || '/login' })
+      })
+  },
 }
 </script>
 

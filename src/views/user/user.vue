@@ -7,7 +7,7 @@
     </div>
     <template>
         <el-table
-            :data="data.tableData5"
+            :data="data.users"
             style="width: 100%">
             <el-table-column type="expand">
             <template slot-scope="props">
@@ -22,7 +22,7 @@
                     <span>{{ props.row.email==null|| props.row.email==''?'用户未绑定邮箱':props.row.email }}</span>
                 </el-form-item>
                 <el-form-item label="创建时间">
-                    <span>{{ props.row.createTime }}</span>
+                    <span>{{ props.row.createdTime }}</span>
                 </el-form-item>
                 <el-form-item label="最近登录">
                     <span>{{ props.row.lastLoginTime }}</span>
@@ -31,7 +31,7 @@
                     <span v-for="status in data.statuses" :key="status.id" >{{ props.row.status==status.id?status.name:"" }}</span>
                 </el-form-item>
                 <el-form-item label="用户权限">
-                    <span>{{ props.row.authen }}</span>
+                    <span>{{ props.row.roleName }}</span>
                 </el-form-item>
                   <el-form-item label="用户地址">
                     <span>{{ props.row.address }}</span>
@@ -40,7 +40,7 @@
                     <span>{{ props.row.alipayAcc==null|| props.row.alipayAcc==''?'用户未提供支付宝':props.row.alipayAcc }}</span>
                 </el-form-item>
                 <el-form-item label="是否实名">
-                    <span>{{ props.row.isAuthName==0?'未实名':'已实名' }}</span>
+                    <span>{{ props.row.cerification==0?'未实名':'已实名' }}</span>
                 </el-form-item>
                   <el-button type="text" @click="detail(props.row)">修改用户信息</el-button>
                 </el-form>
@@ -146,33 +146,15 @@
 </style>
 
 <script>
+  import axios from "axios"
+  axios.defaults.withCredentials=true
   export default {
     data() {
       return {
-        data:{
-           tableData5: [{
-          id: '12987122',
-          name:'胡超',
-          phone: '',
-          email: '1396953791@qq.com',
-          createTime:'2018/05/02 12:15',
-          lastLoginTime:'2018/05/02 12:15',
-          status: '1',
-          authen:'超级管理员',
-          alipayAcc:'',
-          account:'是打算离开家',
-          isAuthName:'0',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        }],
-        statuses:[{id:'1',name:"冻结"},{id:'2',name:"正常"}]
-        },
-       
+        data:'',   
         input:'',
         pageNum:12,
         show:true,
-        phtenvir:false,
         dialogFormVisible: false,
         form: {
           name: '',
@@ -185,13 +167,14 @@
         formLabelWidth: '120px'
       }
     },
-    mounted: function(){
-		//可用于设置自适应屏幕，根据获得的可视宽度（兼容性）判断是否显示
-		let w = document.documentElement.offsetWidth || document.body.offsetWidth;
-      if(w < 1000){
-        this.show = false;
-        this.phtenvir =true;
-      }
+    mounted:function(){
+           axios.post("http://localhost:8081/api/admin/info/allUsers",{
+            "pageSize":2,
+            "currentPage":1
+          }).then(resp=>{
+          console.log(resp)
+          this.data = resp.data.data
+        })
     },
     methods: {
       detail(scope){
@@ -220,7 +203,8 @@
         this.show=true
         this.form=JSON.parse(JSON.stringify(item));
         console.log(this.phone)
-      }
+      },
+    
     }
   }
 </script>

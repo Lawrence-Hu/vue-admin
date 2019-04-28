@@ -33,7 +33,8 @@ export default {
   data() {
     return {
       chart: null,
-      sidebarElm: null
+      sidebarElm: null,
+      expectedData:[150, 150, 150, 150, 150, 150, 150],
     }
   },
   watch: {
@@ -121,7 +122,7 @@ export default {
           },
           smooth: true,
           type: 'line',
-          data: expectedData,
+          data: this.expectedData,
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
         }]

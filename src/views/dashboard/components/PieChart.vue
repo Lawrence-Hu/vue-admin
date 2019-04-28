@@ -47,7 +47,6 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-
       this.chart.setOption({
         tooltip: {
           trigger: 'item',
@@ -67,7 +66,7 @@ export default {
             radius: [15, 95],
             center: ['50%', '38%'],
             data: [
-              { value: 320, name: 'Industries' },
+              { value: 410, name: 'Industries' },
               { value: 240, name: 'Technology' },
               { value: 149, name: 'Forex' },
               { value: 100, name: 'Gold' },

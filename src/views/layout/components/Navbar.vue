@@ -14,7 +14,7 @@
           </el-dropdown-item>
         </router-link>
         <el-dropdown-item divided>
-          <span style="display:block;" @click="logout">LogOut</span>
+          <span style="display:block;" @click="loginout">LogOut</span>
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
@@ -24,7 +24,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-
+import {logout} from '@/api/login'
 export default {
   components: {
     Breadcrumb,
@@ -40,9 +40,14 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')
     },
-    logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload() // 为了重新实例化vue-router对象 避免bug
+    loginout() {
+      logout().then((resp)=>{
+      this.$message({
+            type: 'success',
+            message: '退出登录成功!'
+       });
+        this.$router.push({ path: this.redirect || '/login' })
+        //location.reload()
       })
     }
   }
