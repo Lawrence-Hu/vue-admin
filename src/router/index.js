@@ -110,7 +110,7 @@ export const constantRouterMap = [
         path: '/product/audit',
         name: 'productAdudit',
         redirect:'/product/audit/pending',
-        component: () => import('@/views/form/index'),
+        component: () => import('@/views/products/products'),
         meta: { title: '商品认证', icon: 'form' },
         children: [
           {

@@ -3,7 +3,7 @@
     <panel-group/>
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData" />
+      <line-chart />
     </el-row>
 
     <el-row :gutter="32">

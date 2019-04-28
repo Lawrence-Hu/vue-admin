@@ -1,7 +1,5 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
-import store from '@/store'
-import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
@@ -13,11 +11,11 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use( 
   config => {
-    // Do something before request is sent
-    if (store.getters.token) {
-      // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
-      config.headers['X-Token'] = getToken()
-    }
+    // // Do something before request is sent
+    // if (store.getters.token) {
+    //   // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
+    //   config.headers['X-Token'] = getToken()
+    // }
     return config
   },
   error => {
@@ -44,17 +42,43 @@ service.interceptors.response.use(
     if (res.code !== 0) {
       Message({
         message: res.msg,
-        type  : 'error',
-        duration: 5 * 1000
-      })
-      // 50008:非法的token; 50012:其他客户端登录了;  50014:Token 过期了;
-      if (res.code === 201 || res.code === 50012 || res.code === 50014) {
-        store.dispatch('user/resetToken').then(() => {
-          location.reload()
+        type  : 'success',
+        duration: 3 * 1000
+      }) 
+      if(res.code === -1){
+        Message({
+          message: res.msg,
+          type  : 'error',
+          duration: 3 * 1000
         })
+      }
+      //未授权
+      if(res.code === 401){
+        Message({
+          message: res.msg,
+          type  : 'error',
+          duration: 3 * 1000
+        })
+      }
+       //未
+       if(res.code === 201){
+        Message({
+          message: res.msg,
+          type  : 'error',
+          duration: 3 * 1000
+        })
+        this.$router.push({ path: this.redirect || '/login' })
+        location.reload()
       }
       return Promise.reject(res.message || 'error')
     } else {
+      if(res.code===0 && res.msg!=null){
+        Message({
+          message: res.msg,
+          type  : 'success',
+          duration: 3 * 1000
+        }) 
+      }
       return res
     }
   },

@@ -7,7 +7,7 @@
     </div>
     <template>
         <el-table
-            :data="data.users"
+            :data="data"
             style="width: 100%">
             <el-table-column type="expand">
             <template slot-scope="props">
@@ -146,12 +146,12 @@
 </style>
 
 <script>
-  import axios from "axios"
-  axios.defaults.withCredentials=true
+   import {allUsers} from "@/api/user"
+  // axios.defaults.withCredentials=true
   export default {
     data() {
       return {
-        data:'',   
+        data:[],   
         input:'',
         pageNum:12,
         show:true,
@@ -168,13 +168,11 @@
       }
     },
     mounted:function(){
-           axios.post("http://localhost:8081/api/admin/info/allUsers",{
-            "pageSize":2,
-            "currentPage":1
-          }).then(resp=>{
-          console.log(resp)
-          this.data = resp.data.data
-        })
+      allUsers(2,1).then((resp)=>{
+        this.data=resp.data.users
+      }).catch((error)=>{
+  
+      })
     },
     methods: {
       detail(scope){
