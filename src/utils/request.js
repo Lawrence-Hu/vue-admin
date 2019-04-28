@@ -47,7 +47,7 @@ service.interceptors.response.use(
       })
       return Promise.reject(res)
     } else {
-      if(res.code===0 && res.msg!=null){
+      if(res.msg!=null){
         Message({
           message: res.msg,
           type  : 'success',
