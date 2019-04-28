@@ -170,8 +170,10 @@
     mounted:function(){
       allUsers(2,1).then((resp)=>{
         this.data=resp.data.users
-      }).catch((error)=>{
-  
+      }).catch((error)=>{  
+        if(error.code===201){
+          this.$router.push('/login')
+        }
       })
     },
     methods: {

@@ -1,6 +1,4 @@
 import { login, logout, getInfo } from '@/api/login'
-
-
 const user = {
   state: {
     name: '',

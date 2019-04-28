@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
-
+import store from '@/store'
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.BASE_API, // api 的 base_url
@@ -42,35 +42,10 @@ service.interceptors.response.use(
     if (res.code !== 0) {
       Message({
         message: res.msg,
-        type  : 'success',
+        type  : 'error',
         duration: 3 * 1000
-      }) 
-      if(res.code === -1){
-        Message({
-          message: res.msg,
-          type  : 'error',
-          duration: 3 * 1000
-        })
-      }
-      //未授权
-      if(res.code === 401){
-        Message({
-          message: res.msg,
-          type  : 'error',
-          duration: 3 * 1000
-        })
-      }
-       //未
-       if(res.code === 201){
-        Message({
-          message: res.msg,
-          type  : 'error',
-          duration: 3 * 1000
-        })
-        this.$router.push({ path: this.redirect || '/login' })
-        location.reload()
-      }
-      return Promise.reject(res.message || 'error')
+      })
+      return Promise.reject(res)
     } else {
       if(res.code===0 && res.msg!=null){
         Message({
