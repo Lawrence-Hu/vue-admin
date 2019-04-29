@@ -36,7 +36,7 @@
       <el-form :inline=true :model="form">
          <el-table
           ref="multipleTable"
-          :data="tableData3"
+          :data="tableData"
           tooltip-effect="dark"
           style="width: 100%"
          >
