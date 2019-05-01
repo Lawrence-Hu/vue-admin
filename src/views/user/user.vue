@@ -7,7 +7,7 @@
     </div>
     <template>
         <el-table
-            :data="data"
+            :data="data.users"
             style="width: 100%">
             <el-table-column type="expand">
             <template slot-scope="props">
@@ -28,19 +28,19 @@
                     <span>{{ props.row.lastLoginTime }}</span>
                 </el-form-item>
                 <el-form-item label="账号状态">
-                    <span v-for="status in data.statuses" :key="status.id" >{{ props.row.status==status.id?status.name:"" }}</span>
+                    <span v-for="status in data.statuses" :key="status.id" >{{ props.row.id==status.id?status.statusName:"" }}</span>
                 </el-form-item>
                 <el-form-item label="用户权限">
-                    <span>{{ props.row.roleName }}</span>
+                     <span v-for="status in data.userAuth" :key="status.id" >{{ props.row.roleId==status.id?status.authName:""}}</span>
                 </el-form-item>
                   <el-form-item label="用户地址">
                     <span>{{ props.row.address }}</span>
                 </el-form-item>
                   <el-form-item label="支付宝账号">
-                    <span>{{ props.row.alipayAcc==null|| props.row.alipayAcc==''?'用户未提供支付宝':props.row.alipayAcc }}</span>
+                    <span>{{ props.row.alipayAccount==null|| props.row.alipayAccount==''?'用户未提供支付宝':props.row.alipayAccount }}</span>
                 </el-form-item>
                 <el-form-item label="是否实名">
-                    <span>{{ props.row.cerification==0?'未实名':'已实名' }}</span>
+                    <span>{{ props.row.certification==0?'未实名':'已实名' }}</span>
                 </el-form-item>
                   <el-button type="text" @click="detail(props.row)">修改用户信息</el-button>
                 </el-form>
@@ -64,7 +64,7 @@
             </el-table-column>
           <el-table-column
             label="创建时间"    
-            prop="createTime">
+            prop="createdTime">
             </el-table-column>
         </el-table>
         <!--分页-->
@@ -81,27 +81,29 @@
             </el-form-item>
           
             <el-form-item label="邮箱号" :label-width="formLabelWidth" style="">
-                <el-input :value="form.email==null||form.email==''?'用户未绑定邮箱':form.email" auto-complete="off" style="width:109%"></el-input>
+                <el-input v-model="form.email" :value="form.phone==''?'用户未绑定手机号':form.phone" auto-complete="off" style="width:109%"></el-input>
             </el-form-item>
             
             <el-form-item label="手机号" :label-width="formLabelWidth" style="margin-right:3%">
-                <el-input :value="form.phone==null||form.phone==''?'用户未绑定手机号':form.phone" auto-complete="off" style="width:109%"></el-input>
+                <el-input  v-model="form.phone" :value="form.phone==''?'用户未绑定手机号':form.phone" auto-complete="off" style="width:109%"></el-input>
             </el-form-item>
 
             <el-form-item label="支付宝账号" :label-width="formLabelWidth" style="">
-                <el-input :value="form.alipayAcc==null||form.alipayAcc==''?'用户未提供支付宝账号':form.alipayAcc"  auto-complete="off" style="width:109%"></el-input>
+                <el-input v-model="form.alipayAccount" :value="form.alipayAccount==''?'用户未提供支付宝账号':form.alipayAccount"  auto-complete="off" style="width:109%"></el-input>
             </el-form-item>
             
             <el-form-item label="是否实名" :label-width="formLabelWidth" style="">
-                <el-select v-model="form.isAuthName" placeholder="请选择活动区域">
+                <el-select v-model="form.certification" placeholder="请选择活动区域">
                 <el-option label="未实名" value="0"></el-option>
                 <el-option label="已实名" value="1"></el-option>
                 </el-select>
             </el-form-item>
 
             <el-form-item label="用户状态" :label-width="formLabelWidth" style="padding-right:1%">
-                <el-select v-model="form.status" placeholder="请选择活动区域">
-                  <el-option v-for="status in data.statuses" :key="status.id"  :label="status.name" :value="status.id"></el-option>
+                <el-select v-model="form.status" >
+                  <div v-for="status in data.statuses" :key="status.id">
+                     <el-option :label="status.statusName" :value="status.id"></el-option>
+                  </div>  
                 </el-select>
             </el-form-item>
 
@@ -146,7 +148,7 @@
 </style>
 
 <script>
-   import {allUsers} from "@/api/user"
+   import {allUsers,updateUser} from "@/api/user"
   // axios.defaults.withCredentials=true
   export default {
     data() {
@@ -156,20 +158,20 @@
         pageNum:12,
         show:true,
         dialogFormVisible: false,
-        form: {
-          name: '',
-          phone:'',
-          emial:'',
-          address:'',
-          alipayAcc:'',
-          isAuthName:''
-        },
+        form: {},
         formLabelWidth: '120px'
       }
     },
+  beforeMount:function(){
+      this.$store.dispatch('GetInfo').then(() => {
+      }).catch(()=>{
+        this.$router.push({ path: this.redirect || '/login' })
+      })
+  },
     mounted:function(){
       allUsers(2,1).then((resp)=>{
-        this.data=resp.data.users
+        this.data=resp.data
+        console.log(this.data)
       }).catch((error)=>{  
         if(error.code===201){
           this.$router.push('/login')
@@ -182,29 +184,32 @@
         this.dialogFormVisible=true;
       },
       open2() {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        let that = this
+        this.$confirm('此操作将会对用户产生永久性影响, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
+          type: 'warning',
+          beforeClose:(action,instance,done)=>{
+            if(action==='confirm'){
+              updateUser(that.form)   
+              setTimeout(()=>{
+              done();
+              location.reload()
+              },1000)
+            }
+          }
+        }).catch(()=>{
           this.$message({
-            type: 'success',
-            message: '删除成功!'
+          type: 'error',
+          message: '用户取消操作'
           });
-         this.dialogFormVisible=false;
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        }); 
+        })
       },
       detailforMobile(item){
         this.show=true
         this.form=JSON.parse(JSON.stringify(item));
         console.log(this.phone)
       },
-    
     }
   }
 </script>
