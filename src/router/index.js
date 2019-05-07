@@ -163,7 +163,24 @@ export const constantRouterMap = [
       }
     ]
   },
-
+  {
+    path:'/permission',
+    meta: {title:'权限管理',icon:'form'},
+    name: 'asset',
+    component: Layout,
+    children:[{
+      path:'/permission/all',
+      name:'allRoles',
+     // component:() => import('@view/form/index'),
+      meta:{title: '所有角色',icon: 'form'}
+    },
+    {
+      path:'/permission/addRole',
+      name:'addRole',
+     // component:() => import('@view/form/index'),
+      meta:{title: '新增角色',icon: 'form'}
+    }],
+  },
   {
     path: '/asset',
     meta: {title:'资产管理',icon:'form'},

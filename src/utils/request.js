@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import { MessageBox, Message, Loading } from 'element-ui'
 import store from '@/store'
 // create an axios instance
 const service = axios.create({
@@ -47,7 +47,7 @@ service.interceptors.response.use(
       })
       return Promise.reject(res)
     } else {
-      if(res.msg!=null){
+      if(res.msg!=null){ 
         Message({
           message: res.msg,
           type  : 'success',

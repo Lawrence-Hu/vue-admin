@@ -28,10 +28,10 @@
                     <span>{{ props.row.lastLoginTime }}</span>
                 </el-form-item>
                 <el-form-item label="账号状态">
-                    <span v-for="status in data.statuses" :key="status.id" >{{ props.row.id==status.id?status.statusName:"" }}</span>
+                    <span v-for="status in data.statuses" :key="status.id" >{{ props.row.status==status.id?status.statusName:"" }}</span>
                 </el-form-item>
-                <el-form-item label="用户权限">
-                     <span v-for="status in data.userAuth" :key="status.id" >{{ props.row.roleId==status.id?status.authName:""}}</span>
+                <el-form-item label="用户角色">
+                     <span v-for="role in props.row.roles" :key="role.id" >{{ role.identity+"   "}}</span>
                 </el-form-item>
                   <el-form-item label="用户地址">
                     <span>{{ props.row.address }}</span>
@@ -39,7 +39,7 @@
                   <el-form-item label="支付宝账号">
                     <span>{{ props.row.alipayAccount==null|| props.row.alipayAccount==''?'用户未提供支付宝':props.row.alipayAccount }}</span>
                 </el-form-item>
-                <el-form-item label="是否实名">
+                <el-form-item label="是否实名"> 
                     <span>{{ props.row.certification==0?'未实名':'已实名' }}</span>
                 </el-form-item>
                   <el-button type="text" @click="detail(props.row)">修改用户信息</el-button>
@@ -48,7 +48,7 @@
             </el-table-column>
             <el-table-column
             label="用户ID"
-            prop="id">
+            prop="account">
             </el-table-column>
               <el-table-column
             label="用户账号"    
@@ -81,19 +81,19 @@
             </el-form-item>
           
             <el-form-item label="邮箱号" :label-width="formLabelWidth" style="">
-                <el-input v-model="form.email" :value="form.phone==''?'用户未绑定手机号':form.phone" auto-complete="off" style="width:109%"></el-input>
+                <el-input v-model="form.email" :value="form.email" auto-complete="off" style="width:109%"></el-input>
             </el-form-item>
             
             <el-form-item label="手机号" :label-width="formLabelWidth" style="margin-right:3%">
-                <el-input  v-model="form.phone" :value="form.phone==''?'用户未绑定手机号':form.phone" auto-complete="off" style="width:109%"></el-input>
+                <el-input  v-model="form.phone" :placeholder="form.phone==''?'用户未绑定手机号':form.phone" auto-complete="off" style="width:109%"></el-input>
             </el-form-item>
 
             <el-form-item label="支付宝账号" :label-width="formLabelWidth" style="">
-                <el-input v-model="form.alipayAccount" :value="form.alipayAccount==''?'用户未提供支付宝账号':form.alipayAccount"  auto-complete="off" style="width:109%"></el-input>
+                <el-input v-model="form.alipayAccount" :placeholder="form.alipayAccount==''?'用户未提供支付宝账号':form.alipayAccount"  auto-complete="off" style="width:109%"></el-input>
             </el-form-item>
             
             <el-form-item label="是否实名" :label-width="formLabelWidth" style="">
-                <el-select v-model="form.certification" placeholder="请选择活动区域">
+                <el-select v-model="form.certification" >
                 <el-option label="未实名" value="0"></el-option>
                 <el-option label="已实名" value="1"></el-option>
                 </el-select>
@@ -108,7 +108,7 @@
             </el-form-item>
 
             <el-form-item label="用户地址" :label-width="formLabelWidth"  style="">
-                 <el-input v-model="form.address"></el-input>
+                 <el-input v-model="form.address" :placeholder="form.address==''?'用户未提供地址':form.address" ></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer" style="clear:both;margin-right:12%">
@@ -168,8 +168,8 @@
         this.$router.push({ path: this.redirect || '/login' })
       })
   },
-    mounted:function(){
-      allUsers(2,1).then((resp)=>{
+  mounted:function(){
+      allUsers(20,1).then((resp)=>{
         this.data=resp.data
         console.log(this.data)
       }).catch((error)=>{  
@@ -191,11 +191,17 @@
           type: 'warning',
           beforeClose:(action,instance,done)=>{
             if(action==='confirm'){
-              updateUser(that.form)   
-              setTimeout(()=>{
-              done();
-              location.reload()
-              },1000)
+              updateUser(that.form).then(()=>{
+                setTimeout(()=>{
+                done();
+                location.reload()
+                },1000)
+              }).
+              catch((error)=>{
+                done()
+              })             
+            }else{
+              done()
             }
           }
         }).catch(()=>{
