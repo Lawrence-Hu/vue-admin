@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { get } from 'http';
 
 export function allUsers(pageSize, currentPage) {
     return request({
@@ -55,5 +56,21 @@ export function getRoles(id){
     params:{
       id
     }
+  })
+}
+
+export function getAllRoles(){
+  return request({
+    url:'/admin/user/getAllRoles',
+    method:'get',
+    params:null
+  })
+}
+
+export function addRoleToUser(params){
+  return request({
+    url:'/admin/user/addRole',
+    method:'post',
+    params:params
   })
 }

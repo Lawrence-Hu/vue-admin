@@ -26,51 +26,76 @@
             <el-table-column
             label="管理">
              <template slot-scope="scope">
-                <el-button @click="handleClick(scope.row)" type="primary" size="small">分配角色</el-button>
-                <el-button type="success" class="manage" size="medium" >detail</el-button>
+                <el-button @click="detail(scope.row)" type="primary" size="small">查看详情</el-button>
+                <el-button type="success" class="manage" @click="role(scope.row)" size="small" >分配角色</el-button>
             </template>
             </el-table-column>
         </el-table>
     </template>
     <el-dialog :title=dialogTitle :visible.sync="dialogFormVisible">
-      <el-form :inline=true :model="form">
+      <el-form :inline=true>
          <el-table
           ref="multipleTable"
           :data="roles"
           tooltip-effect="dark"
           style="width: 100%"
-          height="300px"
+          :height="height"
+          @select="selectItem"
          > 
          <el-table-column
+              v-if="select"
               type="selection"
-              width="100">
+              width="40">
             </el-table-column>
             <el-table-column
               prop="identity"
               label="角色名称"
-              width="140">
+              width="100">
             </el-table-column>
             <el-table-column
               prop="description"
               label="角色描述"
+               width="400"
               show-overflow-tooltip>
             </el-table-column>
               <el-table-column
               prop="created_time"
               label="创建时间"
+              width="180"
               show-overflow-tooltip>
             </el-table-column>
+            <el-table-column
+              width="120"
+              label="查看角色权限" 
+              show-overflow-tooltip
+               type="expand">
+              <template slot-scope="scope">
+                    <el-table
+                      :data="scope.row.permissions"
+                      style=" margin-left:12%;width: 100%">
+                      <el-table-column
+                        prop="name"   
+                        label="权限名称"                  
+                        width="400">
+                      </el-table-column>
+                      <el-table-column
+                        label="权限描述"               
+                        prop="description"
+                        width="180">
+                      </el-table-column>
+                    </el-table>
+              </template>
+          </el-table-column>
         </el-table>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button style="margin-right:20px;margin-bottom:20px" @click="dialogFormVisible = false">取 消</el-button>
-        <el-button style="margin-right:50px;margin-bottom:20px" type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      <div slot="footer" v-if="select" class="dialog-footer">
+        <el-button style="margin-right:50px;margin-bottom:20px" @click="comfirm()" type="primary">确 定</el-button>
       </div>
     </el-dialog>
     </div>
 </template>
 <script>
- import { allUserByRoles,getRoles } from "@/api/user";
+ import { allUserByRoles,getRoles,getAllRoles } from "@/api/user";
 export default {
     data() {
       return {
@@ -78,10 +103,16 @@ export default {
         dialogTableVisible: false,
         dialogFormVisible: false,
         roles: [],
+        select:false,
+        height:'',
         dialogTitle:'',
-        form:{
-        },
-        formLabelWidth: '120px'
+        userId:null,
+        selection:null,
+        permissions:[],
+        formLabelWidth: '120px',
+        aaa:function(a,b){
+          alert("aaa")
+        }
       }
     },
     mounted:function(){
@@ -91,15 +122,40 @@ export default {
         })
     },
     methods:{
-      handleClick(row){
-        this.dialogTitle=row.name+''
+      detail(row){
+        this.select=false
+        this.height="380px";
+        this.dialogTitle=row.name+'拥有的角色'
         getRoles(row.id).then((resp)=>{
-         console.log(resp.data)
           this.roles = resp.data
         })
         this.dialogFormVisible=true
-      }
+      },
+      role(row){
+        this.select=true
+        this.height="300px";
+        this.userId=row.id
+        this.dialogTitle=row.name+''
+        getAllRoles().then((resp)=>{
+          this.roles = resp.data
+        })
+        this.dialogFormVisible=true
+      },
+      selectItem(selection){
+        this.selection = selection
+      },
+      comfirm(){
+        let roleIds = [];
+        for(var i=0;i<this.selection.length;i++){
+            roleIds.push(this.selection[i].id)
+        }
+        var params = {
+          roleIds:roleIds,
+          user_id:this.userId
+        }
+        console.log(params)
     }
+    },
 }
 </script>
 <style>
