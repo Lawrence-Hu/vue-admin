@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import { get } from 'http';
+import { async } from 'q';
 
 export function allUsers(pageSize, currentPage) {
     return request({
@@ -38,18 +39,8 @@ export function frozenUsers(pageSize,currentPage,){
     }
   })
 }
-export function allUserByRoles(pageSize,currentPage,){
-  return request({
-    url:'/admin/user/allUserByRoles',
-    method:'get',
-    params:{
-      pageSize,
-      currentPage,
-    }
-  })
-}
 
-export function getRoles(id){
+export  function getRoles(id){
   return request({
     url:'/admin/user/getRoles',
     method:'get',
@@ -72,5 +63,51 @@ export function addRoleToUser(params){
     url:'/admin/user/addRole',
     method:'post',
     params:params
+  })
+}
+
+export function deleteUserRole(params){
+  return request({
+    url:'/admin/user/deleteUserRole',
+    method:'post',
+    data:params
+  })
+}
+
+export function asignUserRole(params){
+  return request({
+    url:'/admin/user/asignUserRole',
+    method:'post',
+    data:params
+  })
+}
+
+export function allUserAuthByPages(pageSize,currentPage){
+  return request({
+    url:'/admin/user/auth',
+    method:'get',
+    params:{
+      pageSize,
+      currentPage,
+    }
+  })
+}
+
+export function userAuthAudit(params){
+  return request({
+    url:'/admin/user/auth/confirm',
+    method:'post',
+    data:params
+  })
+}
+
+export function allUserAuthHandledByPages(pageSize,currentPage){
+  return request({
+    url:'/admin/user/auth/handled',
+    method:'get',
+    params:{
+      pageSize,
+      currentPage,
+    }
   })
 }

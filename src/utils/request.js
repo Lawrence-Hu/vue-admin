@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { MessageBox, Message, Loading } from 'element-ui'
 import store from '@/store'
+
+let loading;
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.BASE_API, // api 的 base_url
@@ -11,11 +13,17 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use( 
   config => {
+    loading = Loading.service({
+      lock: true,
+      text: '加载中……',
+      background: 'rgba(0, 0, 0, 0.7)'
+    });
     // // Do something before request is sent
     // if (store.getters.token) {
     //   // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
     //   config.headers['X-Token'] = getToken()
     // }
+    Loading.service({ fullscreen: true });
     return config
   },
   error => {
@@ -38,6 +46,8 @@ service.interceptors.response.use(
    * 以下代码均为样例，请结合自生需求加以修改，若不需要，则可删除
    */
   response => {
+    loading.close();
+   // Loading.service({ fullscreen: false });
     const res = response.data
     if (res.code !== 0) {
       Message({

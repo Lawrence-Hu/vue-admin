@@ -2,11 +2,10 @@
     <div>
         <template>
             <el-table
-            :data="tableData"
-            border
-            style="width: 100%;margin-left:3%">
-               <el-table-column
-            prop="date"
+            :data="data"
+            border>
+            <el-table-column
+            prop="userId"
             label="用户Id"
             width="300">
             </el-table-column>
@@ -16,8 +15,8 @@
             width="200">
             </el-table-column>
             <el-table-column
-            prop="date"
-            label="日期"
+            prop="createdTime"
+            label="创建日期"
             width="200">
             </el-table-column> 
             <el-table-column
@@ -25,15 +24,14 @@
             label="备注">
             </el-table-column>
             <el-table-column
-            prop="address"
             label="详情">
             <template slot-scope="scope">
                 <el-button
                 size="medium"
-                @click="handleEdit(scope.$index, scope.row)">详情</el-button>    
+                @click="detail(scope.$index, scope.row)">详情</el-button>    
                 <el-button
-                :type="scope.row.tag === '已通过' ? 'success' : 'danger'" size="medium"
-                :disabled="true">{{scope.row.tag}}</el-button>
+                :type="scope.row.status == true ? 'success' : 'danger'" size="medium"
+                :disabled="true">{{scope.row.status == true? "已通过" : "已驳回"}}</el-button>
             </template>      
             </el-table-column>
         </el-table>
@@ -42,84 +40,65 @@
         <el-form :model="form" :inline="true">
             <div class="block" style="width:58%;float:right" >
                 <el-carousel trigger="click" height="250px" >
-                    <el-carousel-item v-for="item in 4" :key="item">
-                        <h3>{{ item }}</h3>
+                    <el-carousel-item v-for="item in form.imgs" :key="item.id">
+                        <h3>{{ item.url }}</h3>
                     </el-carousel-item>
                 </el-carousel>  
             </div>
-            <el-form-item label="认证Id" label-width="68px">
-                <el-input :disabled="true" v-model="form.name"></el-input>
+            <el-form-item label="认证号" label-width="68px">
+                <el-input :disabled="true" :value="form.userId|idFilter"></el-input>
             </el-form-item>
            <el-form-item label="姓名" label-width="68px">
                 <el-input  :disabled="true" v-model="form.name"></el-input>
             </el-form-item>
             <el-form-item label="身份证号">
-                <el-input :disabled="true" v-model="form.name"></el-input>
+                <el-input :disabled="true" v-model="form.creditId"></el-input>
             </el-form-item>
             <el-form-item label="当前住址">
-                <el-input :disabled="true" v-model="form.name"></el-input>
+                <el-input :disabled="true" v-model="form.address"></el-input>
             </el-form-item>
             <el-form-item label="信息">
-                <el-input type="textarea" style ="width:250%;height:400%" :disabled="true" v-model="form.name"></el-input>
+                <el-input type="textarea" style ="width:250%;height:400%" :disabled="true" v-model="form.comments"></el-input>
             </el-form-item>
         </el-form>
     </el-dialog>
 </div>
 </template>
 <script>
+import {allUserAuthHandledByPages} from '@/api/user'
 export default {
+     name:'Audit',
      data() {
       return {
         dialogFormVisible:false,
         formLabelWidth: '120px',
         form: {
-            name: '',
-            region: '',
-            date1: '',
-            date2: '',
-            delivery: false,
-            type: [],
-            resource: '',
-            desc: ''
         },
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          tag:'已通过',
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄',
-          tag:'已通过',
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄',
-          tag:'已通过',
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄',
-          tag:'已驳回',
-        }]
+        data: [],
       }
     },
+    beforeMount:function(){
+        allUserAuthHandledByPages(2,1).then((resp)=>{
+            this.data=resp.data.records
+        }).catch(()=>{})
+    },
+    filters:{
+        idFilter:function(value){
+            return !value?'':value.substring(0,15)
+        }
+    },
     methods: {
-      handleEdit(index, row) {
+      detail(index, row) {
         this.dialogFormVisible=true
-        console.log(index, row);
+        this.form = row
       },
-      handleDelete(index, row) {
-        console.log(index, row);
-      }
     }
 }
 </script>
-<style scoped>
-  .el-input__inner{
+<style >
+ .el-input__inner{
       height:43px;
-      width: 120%;
+      width: 122%;
   }
  .el-textarea__inner{
      padding:15px 15px;

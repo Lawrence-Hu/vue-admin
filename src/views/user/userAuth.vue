@@ -27,7 +27,7 @@
             label="管理">
              <template slot-scope="scope">
                 <el-button @click="detail(scope.row)" type="primary" size="small">查看详情</el-button>
-                <el-button type="success" class="manage" @click="role(scope.row)" size="small" >分配角色</el-button>
+                <el-button type="success" class="manage" @click="allRoles(scope.row)" size="small" >分配角色</el-button>
             </template>
             </el-table-column>
         </el-table>
@@ -39,11 +39,10 @@
           :data="roles"
           tooltip-effect="dark"
           style="width: 100%"
-          :height="height"
-          @select="selectItem"
+          height=300px
+          @selection-change="selectItem"
          > 
          <el-table-column
-              v-if="select"
               type="selection"
               width="40">
             </el-table-column>
@@ -55,7 +54,7 @@
             <el-table-column
               prop="description"
               label="角色描述"
-               width="400"
+               width="280"
               show-overflow-tooltip>
             </el-table-column>
               <el-table-column
@@ -72,11 +71,11 @@
               <template slot-scope="scope">
                     <el-table
                       :data="scope.row.permissions"
-                      style=" margin-left:12%;width: 100%">
+                      style=" margin-left:14%;width: 100%">
                       <el-table-column
                         prop="name"   
                         label="权限名称"                  
-                        width="400">
+                        width="280">
                       </el-table-column>
                       <el-table-column
                         label="权限描述"               
@@ -88,63 +87,82 @@
           </el-table-column>
         </el-table>
       </el-form>
-      <div slot="footer" v-if="select" class="dialog-footer">
-        <el-button style="margin-right:50px;margin-bottom:20px" @click="comfirm()" type="primary">确 定</el-button>
+      <div slot="footer" class="dialog-footer">
+        <el-button style="margin-bottom:10px" @click="dialogFormVisible = false">取消</el-button>
+        <el-button style="margin-right:50px;margin-bottom:10px" @click="confirm()" type="primary">{{ submit=="del"?'删除所选角色':'分配所选角色'}}</el-button>
       </div>
     </el-dialog>
     </div>
 </template>
 <script>
- import { allUserByRoles,getRoles,getAllRoles } from "@/api/user";
+import { allUsers,getRoles,getAllRoles,asignUserRole,deleteUserRole } from "@/api/user";
+import { Message } from 'element-ui'
 export default {
     data() {
       return {
         users: [],
-        dialogTableVisible: false,
         dialogFormVisible: false,
         roles: [],
-        select:false,
-        height:'',
+        submit:null,
         dialogTitle:'',
         userId:null,
         selection:null,
         permissions:[],
         formLabelWidth: '120px',
-        aaa:function(a,b){
-          alert("aaa")
-        }
       }
     },
     mounted:function(){
-          allUserByRoles(2,1).then((resp)=>{
+          //获取用户
+          allUsers(2,1).then((resp)=>{
           this.users = resp.data.users
-        
         })
     },
     methods:{
-      detail(row){
-        this.select=false
-        this.height="380px";
-        this.dialogTitle=row.name+'拥有的角色'
-        getRoles(row.id).then((resp)=>{
-          this.roles = resp.data
-        })
-        this.dialogFormVisible=true
-      },
-      role(row){
-        this.select=true
-        this.height="300px";
+      // getUserRoles(id){
+      //     getRoles(id)
+      //     .then((resp)=>{
+      //         this.roles = resp.data
+      //      })
+      //      .catch((e)=>{
+      //        this.roles = e.data
+      //      })
+      // },
+      async detail(row){
+        this.selection=null
+        this.submit="del"
         this.userId=row.id
-        this.dialogTitle=row.name+''
-        getAllRoles().then((resp)=>{
-          this.roles = resp.data
-        })
+        this.dialogTitle=row.name+'拥有的角色'
+        try{
+            let resp = await getRoles(row.id)
+            this.roles = resp.data
+            this.dialogFormVisible=true
+        }catch(err){
+            this.dialogFormVisible=false
+        } 
+      },
+     async allRoles(row){
+        this.selection=null
+        this.submit="asign"
+        this.userId=row.id
+        this.dialogTitle='给'+row.name+'分配角色'
+        let resp = await getAllRoles()
+        this.roles = resp.data
         this.dialogFormVisible=true
       },
       selectItem(selection){
         this.selection = selection
       },
-      comfirm(){
+    
+      async confirm(){
+        if(this.selection==null||this.selection.length==0){
+             Message({
+                message: "您还没有选择角色呢！",
+                type  : 'warning',
+                duration: 3 * 1000
+              }) 
+              return
+        }
+        //数据封装
         let roleIds = [];
         for(var i=0;i<this.selection.length;i++){
             roleIds.push(this.selection[i].id)
@@ -153,8 +171,20 @@ export default {
           roleIds:roleIds,
           user_id:this.userId
         }
-        console.log(params)
-    }
+
+        if(this.submit=='del'){
+          await deleteUserRole(params)
+          try{
+              let resp = await getRoles(this.userId)
+              this.roles = resp.data 
+          }catch(err){
+              this.dialogFormVisible = false
+          }    
+        }else if(this.submit=="asign"){
+          asignUserRole(params).catch(err=>{})
+          this.dialogFormVisible=false
+        }
+    },
     },
 }
 </script>

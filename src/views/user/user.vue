@@ -40,7 +40,7 @@
                     <span>{{ props.row.alipayAccount==null|| props.row.alipayAccount==''?'用户未提供支付宝':props.row.alipayAccount }}</span>
                 </el-form-item>
                 <el-form-item label="是否实名"> 
-                    <span>{{ props.row.certification==0?'未实名':'已实名' }}</span>
+                    <span>{{ props.row.certification==true?'已实名':'未实名' }}</span>
                 </el-form-item>
                   <el-button type="text" @click="detail(props.row)">修改用户信息</el-button>
                 </el-form>
@@ -74,7 +74,7 @@
           :total="pageNum"  class="pagination">
         </el-pagination>
         <!-- Form -->
-        <el-dialog title="用户信息修改" :visible.sync="dialogFormVisible">
+        <el-dialog title="用户信息修改" :visible.sync="dialogFormVisible" width="55%" >
         <el-form :inline="true" :model="form">
             <el-form-item label="姓名" :label-width="formLabelWidth" style="margin-right:3%">
                 <el-input v-model="form.name" auto-complete="off"  style="width:109%"></el-input>
@@ -94,8 +94,8 @@
             
             <el-form-item label="是否实名" :label-width="formLabelWidth" style="">
                 <el-select v-model="form.certification" >
-                <el-option label="未实名" value="0"></el-option>
-                <el-option label="已实名" value="1"></el-option>
+                <el-option label="未实名" :value="false"></el-option>
+                <el-option label="已实名" :value="true"></el-option>
                 </el-select>
             </el-form-item>
 
@@ -113,7 +113,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer" style="clear:both;margin-right:12%">
             <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="open2">确 定</el-button>
+            <el-button type="primary" @click="submit">确 定</el-button>
         </div>
         </el-dialog>
     </template>
@@ -183,7 +183,7 @@
         this.form=JSON.parse(JSON.stringify(scope))
         this.dialogFormVisible=true;
       },
-      open2() {
+      submit() {
         let that = this
         this.$confirm('此操作将会对用户产生永久性影响, 是否继续?', '提示', {
           confirmButtonText: '确定',

@@ -2,11 +2,10 @@
     <div>
         <template>
             <el-table
-            :data="tableData"
-            border
-            style="width: 100%;margin-left:3%">
-               <el-table-column
-            prop="date"
+            :data="data"
+            border>
+            <el-table-column
+            prop="userId"
             label="用户Id"
             width="300">
             </el-table-column>
@@ -16,42 +15,39 @@
             width="200">
             </el-table-column>
             <el-table-column
-            prop="date"
+            prop="createdTime"
             label="日期"
             width="200">
             </el-table-column> 
             <el-table-column
             prop="address"
-            label="备注">
+            label="地址">
             </el-table-column>
             <el-table-column
-            prop="address"
             label="详情">
             <template slot-scope="scope">
-              <el-button
-              size="medium"
-              @click="handleEdit(scope.$index, scope.row)">详情</el-button>
-              <el-button
-              size="medium"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)">驳回</el-button>
-          </template>
-          </el-table-column>
-      </el-table>
-  </template>
-  <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
-          <el-form :model="form" :inline="true">
+                <el-button
+                size="medium"
+                @click="detail(scope.$index, scope.row)">详情</el-button>    
+                <el-button
+                type="danger">驳回</el-button>
+            </template>      
+            </el-table-column>
+        </el-table>
+    </template>
+    <el-dialog title="用户认证" :visible.sync="dialogFormVisible"  >
+        <el-form :model="form" :inline="true">
             <div class="block" style="width:58%;float:right" >
                 <el-carousel trigger="click" height="250px" >
                     <el-carousel-item v-for="item in 4" :key="item">
                         <h3>{{ item }}</h3>
                     </el-carousel-item>
-                </el-carousel>
+                </el-carousel>  
             </div>
-            <el-form-item label="认证Id" label-width="68px">
-                <el-input :disabled="true" v-model="form.id"></el-input>
+            <el-form-item label="认证号" label-width="68px">
+                <el-input  :disabled="true" :value="form.userId|idFilter"></el-input>
             </el-form-item>
-          <el-form-item label="姓名" label-width="68px">
+           <el-form-item label="姓名" label-width="68px">
                 <el-input  :disabled="true" v-model="form.name"></el-input>
             </el-form-item>
             <el-form-item label="身份证号">
@@ -60,79 +56,70 @@
             <el-form-item label="当前住址">
                 <el-input :disabled="true" v-model="form.address"></el-input>
             </el-form-item>
-            <el-form-item label="备注">
-                <el-input type="textarea" style ="width:250%;height:400%"  v-model="form.comments"></el-input>
+            <el-form-item label="信息" v-model="form.comments">
+                <el-input type="textarea" style ="width:250%;height:400%" :disabled="true" v-model="form.name"></el-input>
             </el-form-item>
+             <el-button type="danger" @click="handleAudit(form,false)" style="float:right;margin-right:40px;margin-top:60px">驳回</el-button>
+             <el-button type="success" @click="handleAudit(form,true)"  style="float:right;margin-right:20px;margin-top:60px">通过</el-button>
         </el-form>
-        <div slot="footer" class="dialog-footer" style="margin-right:8%">
-            <el-button type="success" @click="open2()">通过</el-button>
-            <el-button type="primary" @click="dialogFormVisible = false">驳回</el-button>
-        </div>
     </el-dialog>
 </div>
 </template>
 <script>
+import {userAuthAudit,allUserAuthByPages} from "@/api/user"
 export default {
      data() {
       return {
         dialogFormVisible:false,
         formLabelWidth: '120px',
         form: {
-            name: '',
-            id: '',
-            creditId: '',
-            address: '',
-            comments: '',
         },
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }]
+        data: []
       }
     },
+    beforeMount:function(){
+        allUserAuthByPages(2,1).then((resp)=>{
+            this.data=resp.data.records
+        })
+    },
+    filters:{
+        idFilter:function(value){
+            if(!value){
+                return;
+            }
+            return value.substring(0,15)
+        }
+    },
     methods: {
-      handleEdit(index, row) {
+      detail(index, row) {
         this.dialogFormVisible=true
-        console.log(index, row);
+        this.form=row
       },
-      handleDelete(index, row) {
-        console.log(index, row);
-      },
-      open2() {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-         this.dialogFormVisible=false;
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        }); 
+      async handleAudit(form,isPassed) {
+       //数据封装
+       var params = {
+        "id":form.id,
+        "user_id":form.userId,
+        "isPassed":isPassed
+        }
+        try{
+            await userAuthAudit(params)
+            this.dialogFormVisible = false
+        }catch(err){
+            this.dialogFormVisible = false
+        }
       }
     }
 }
 </script>
-<style>
-
+<style >
+  .el-input__inner{
+      height:43px;
+      width: 120%;
+  }
+ .el-textarea__inner{
+     padding:15px 15px;
+     height: 80px;
+ }  
 </style>
 
