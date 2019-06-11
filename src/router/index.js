@@ -101,28 +101,22 @@ export const constantRouterMap = [
         meta: { title: '所有商品', icon: 'form' },
       },
       {
-        path:'/product/category',
-        name: 'productCategory',
-        meta:{title:'商品种类管理',icon:'form'},
-        component: () => import('@/views/products/category'),
-      },
-      {
         path: '/product/audit',
         name: 'productAdudit',
         redirect:'/product/audit/pending',
-        component: () => import('@/views/products/products'),
+        component:() => import('@/views/layout/components/AppMain'),
         meta: { title: '商品认证', icon: 'form' },
         children: [
           {
             path:'/product/audit/pending',
             name:'productAuditPending',
-           // component:() => import('@view/form/index'),
+            component:() => import('@/views/products/auditPending'),
             meta:{title: '待处理',icon: 'form'}
           },
           {
             path:'/product/audit/handled',
             name:'productAuditHandled',
-           // component:() => import('@view/form/index'),
+            //component:() => import('@view/products/audoit'),
             meta:{title: '已处理',icon: 'form'}
           }
         ]

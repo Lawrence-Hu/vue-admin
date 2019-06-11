@@ -7,7 +7,7 @@
     </div>
     <template>
         <el-table
-            :data="data.users"
+            :data="data.records"
             style="width: 100%">
             <el-table-column type="expand">
             <template slot-scope="props">
@@ -28,7 +28,7 @@
                     <span>{{ props.row.lastLoginTime }}</span>
                 </el-form-item>
                 <el-form-item label="账号状态">
-                    <span v-for="status in data.statuses" :key="status.id" >{{ props.row.status==status.id?status.statusName:"" }}</span>
+                    <span  >{{ props.row.userStatus.statusName }}</span>
                 </el-form-item>
                 <el-form-item label="用户角色">
                      <span v-for="role in props.row.roles" :key="role.id" >{{ role.identity+"   "}}</span>
@@ -45,10 +45,6 @@
                   <el-button type="text" @click="detail(props.row)">修改用户信息</el-button>
                 </el-form>
             </template>
-            </el-table-column>
-            <el-table-column
-            label="用户ID"
-            prop="account">
             </el-table-column>
               <el-table-column
             label="用户账号"    
@@ -71,10 +67,14 @@
         <el-pagination
           background
           layout="prev, pager, next"
-          :total="pageNum"  class="pagination">
+          :total="pageNum"
+          :current-page="currentPage"
+          :page-size="pageSize"
+          @current-change="pageChange"
+            class="pagination">
         </el-pagination>
         <!-- Form -->
-        <el-dialog title="用户信息修改" :visible.sync="dialogFormVisible" width="55%" >
+        <el-dialog title="用户信息修改" :visible.sync="dialogFormVisible" width="850px" >
         <el-form :inline="true" :model="form">
             <el-form-item label="姓名" :label-width="formLabelWidth" style="margin-right:3%">
                 <el-input v-model="form.name" auto-complete="off"  style="width:109%"></el-input>
@@ -108,7 +108,7 @@
             </el-form-item>
 
             <el-form-item label="用户地址" :label-width="formLabelWidth"  style="">
-                 <el-input v-model="form.address" :placeholder="form.address==''?'用户未提供地址':form.address" ></el-input>
+                 <el-input v-model="form.address" :placeholder="form.address==''?'用户未提供地址':form.address" style="width:109%"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer" style="clear:both;margin-right:12%">
@@ -148,54 +148,58 @@
 </style>
 
 <script>
-   import {allUsers,updateUser} from "@/api/user"
-  // axios.defaults.withCredentials=true
+  import {allUsers,updateUser} from "@/api/user"
   export default {
     data() {
       return {
         data:[],   
         input:'',
-        pageNum:12,
+        currentPage:1,
+        pageSize:1,
+        pageNum:null,
+        row:null,
         show:true,
         dialogFormVisible: false,
         form: {},
         formLabelWidth: '120px'
       }
     },
-  beforeMount:function(){
-      this.$store.dispatch('GetInfo').then(() => {
-      }).catch(()=>{
-        this.$router.push({ path: this.redirect || '/login' })
-      })
-  },
-  mounted:function(){
-      allUsers(20,1).then((resp)=>{
-        this.data=resp.data
-        console.log(this.data)
-      }).catch((error)=>{  
-        if(error.code===201){
-          this.$router.push('/login')
-        }
-      })
+    created:function(){
+        this.pageChange(1)
+        this.$store.dispatch('GetInfo').then(() => {
+        }).catch(()=>{
+          this.$router.push({ path: this.redirect || '/login' })
+        })
     },
     methods: {
       detail(scope){
+        this.row=scope
         this.form=JSON.parse(JSON.stringify(scope))
         this.dialogFormVisible=true;
       },
+      pageChange(num){
+        allUsers(this.pageSize,num).then((resp)=>{
+          this.pageNum = resp.data.pages
+          this.data=resp.data
+        }).catch((error)=>{  
+          if(error.code===201){
+            this.$router.push('/login')
+          }
+        })
+      },
       submit() {
-        let that = this
         this.$confirm('此操作将会对用户产生永久性影响, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
           beforeClose:(action,instance,done)=>{
             if(action==='confirm'){
-              updateUser(that.form).then(()=>{
-                setTimeout(()=>{
-                done();
-                location.reload()
-                },1000)
+              updateUser(this.form).then(()=>{
+                   for (const key in this.form) {
+                      this.row[key] = this.form[key]
+                    }
+                    this.dialogFormVisible = false
+                 done()
               }).
               catch((error)=>{
                 done()
@@ -210,11 +214,6 @@
           message: '用户取消操作'
           });
         })
-      },
-      detailforMobile(item){
-        this.show=true
-        this.form=JSON.parse(JSON.stringify(item));
-        console.log(this.phone)
       },
     }
   }

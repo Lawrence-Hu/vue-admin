@@ -7,7 +7,7 @@
     </div>
     <template>
         <el-table
-            :data="data.users"
+            :data="data"
             style="width: 100%">
             <el-table-column type="expand">
             <template slot-scope="props">
@@ -28,10 +28,10 @@
                     <span>{{ props.row.lastLoginTime }}</span>
                 </el-form-item>
                 <el-form-item label="账号状态">
-                    <span v-for="status in data.statuses" :key="status.id" >{{ props.row.status==status.id?status.statusName:"" }}</span>
+                    <span >{{ props.row.userStatus.statusName}}</span>
                 </el-form-item>
-                <el-form-item label="用户权限">
-                     <span v-for="role in data.userRoles" :key="role.id" >{{ props.row.roleId==role.id?role.roleName:""}}</span>
+                <el-form-item label="用户角色">
+                     <span v-for="item in props.row.roles" :key="item.identity">{{item.identity +"   " }}  </span>
                 </el-form-item>
                   <el-form-item label="用户地址">
                     <span>{{ props.row.address }}</span>
@@ -44,10 +44,6 @@
                 </el-form-item>
                 </el-form>
             </template>
-            </el-table-column>
-            <el-table-column
-            label="用户ID"
-            prop="id">
             </el-table-column>
               <el-table-column
             label="用户账号"    
@@ -133,8 +129,7 @@
   },
   mounted:function(){
       frozenUsers(20,1).then((resp)=>{
-        this.data=resp.data
-        console.log(this.data)
+        this.data=resp.data.records
       }).catch((error)=>{  
         if(error.code===201){
           this.$router.push('/login')

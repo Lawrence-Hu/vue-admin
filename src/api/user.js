@@ -1,10 +1,8 @@
 import request from '@/utils/request'
-import { get } from 'http';
-import { async } from 'q';
 
 export function allUsers(pageSize, currentPage) {
     return request({
-      url: '/admin/info/allUsers',
+      url: '/admin/user/allUsers',
       method: 'get',
       params: {
         pageSize,
@@ -22,16 +20,16 @@ export function updateUser(user){
 
 export function changeStatus(id){
   return request({
-    url:'/admin/user/changeStatus',
+    url:'/admin/user/active',
     method:'post',
     data:{
       id
     }
   })
 }
-export function frozenUsers(pageSize,currentPage,){
+export function frozenUsers(pageSize,currentPage){
   return request({
-    url:'/admin/user/frozenUsers',
+    url:'/admin/user/frozen',
     method:'get',
     params:{
       pageSize,
@@ -42,7 +40,7 @@ export function frozenUsers(pageSize,currentPage,){
 
 export  function getRoles(id){
   return request({
-    url:'/admin/user/getRoles',
+    url:'/admin/user/roles',
     method:'get',
     params:{
       id
@@ -52,7 +50,7 @@ export  function getRoles(id){
 
 export function getAllRoles(){
   return request({
-    url:'/admin/user/getAllRoles',
+    url:'/admin/user/allRoles',
     method:'get',
     params:null
   })
@@ -68,7 +66,7 @@ export function addRoleToUser(params){
 
 export function deleteUserRole(params){
   return request({
-    url:'/admin/user/deleteUserRole',
+    url:'/admin/user/deleteRole',
     method:'post',
     data:params
   })
@@ -76,38 +74,28 @@ export function deleteUserRole(params){
 
 export function asignUserRole(params){
   return request({
-    url:'/admin/user/asignUserRole',
+    url:'/admin/user/assignRole',
     method:'post',
     data:params
   })
 }
 
-export function allUserAuthByPages(pageSize,currentPage){
+export function allUserAuditByPages(pageSize,currentPage,isHandled){
   return request({
-    url:'/admin/user/auth',
+    url:'/admin/user/audit',
     method:'get',
     params:{
       pageSize,
       currentPage,
+      isHandled
     }
   })
 }
 
 export function userAuthAudit(params){
   return request({
-    url:'/admin/user/auth/confirm',
+    url:'/admin/user/audit/confirm',
     method:'post',
     data:params
-  })
-}
-
-export function allUserAuthHandledByPages(pageSize,currentPage){
-  return request({
-    url:'/admin/user/auth/handled',
-    method:'get',
-    params:{
-      pageSize,
-      currentPage,
-    }
   })
 }

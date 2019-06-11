@@ -5,14 +5,14 @@
             :data="data"
             border>
             <el-table-column
-            prop="userId"
-            label="用户Id"
-            width="300">
-            </el-table-column>
-            <el-table-column
             prop="name"
             label="姓名"
             width="200">
+            </el-table-column>
+            <el-table-column
+            prop="creditId"
+            label="身份证号"
+            width="250">
             </el-table-column>
             <el-table-column
             prop="createdTime"
@@ -57,7 +57,7 @@
                 <el-input :disabled="true" v-model="form.address"></el-input>
             </el-form-item>
             <el-form-item label="信息" v-model="form.comments">
-                <el-input type="textarea" style ="width:250%;height:400%" :disabled="true" v-model="form.name"></el-input>
+                <el-input type="textarea" style ="width:250%;height:400%" :disabled="true" v-model="form.comments"></el-input>
             </el-form-item>
              <el-button type="danger" @click="handleAudit(form,false)" style="float:right;margin-right:40px;margin-top:60px">驳回</el-button>
              <el-button type="success" @click="handleAudit(form,true)"  style="float:right;margin-right:20px;margin-top:60px">通过</el-button>
@@ -66,7 +66,7 @@
 </div>
 </template>
 <script>
-import {userAuthAudit,allUserAuthByPages} from "@/api/user"
+import {userAuthAudit,allUserAuditByPages} from "@/api/user"
 export default {
      data() {
       return {
@@ -78,7 +78,7 @@ export default {
       }
     },
     beforeMount:function(){
-        allUserAuthByPages(2,1).then((resp)=>{
+        allUserAuditByPages(2,1,false).then((resp)=>{
             this.data=resp.data.records
         })
     },

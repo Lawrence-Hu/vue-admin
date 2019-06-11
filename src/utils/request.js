@@ -48,6 +48,7 @@ service.interceptors.response.use(
   response => {
     loading.close();
    // Loading.service({ fullscreen: false });
+    console.log(response.headers)
     const res = response.data
     if (res.code !== 0) {
       Message({

@@ -3,14 +3,17 @@ const user = {
   state: {
     name: '',
     avatar: '',
+    token:'',
   },
-
   mutations: {
     SET_NAME: (state, name) => {
       state.name = name
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
+    },
+    SET_TOKON: (state, token) => {
+      state.token = token
     },
   },
   actions: {
@@ -33,6 +36,7 @@ const user = {
           const data = response.data
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.imgUrl)
+          console.log(data)
           resolve(response)
         }).catch(error => {
           reject("请登录")

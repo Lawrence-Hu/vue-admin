@@ -1,11 +1,9 @@
 <template>
    <div class="dashboard-editor-container">
     <panel-group/>
-
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart />
     </el-row>
-
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
@@ -32,6 +30,7 @@ import LineChart from './components/LineChart'
 import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
 import TransactionTable from './components/TransactionTable'
+import Loading from 'element-ui'
 
 
 export default {
@@ -45,15 +44,16 @@ export default {
   },
   data() {
     return {
-    
+       dialogVisible:false,
+       fullscreenLoading:false
     }
   },
-  mounted:function(){
+  beforeMount:function(){
       this.$store.dispatch('GetInfo').then(() => {
       }).catch(()=>{
         this.$router.push({ path: this.redirect || '/login' })
       })
-  },
+  }
 }
 </script>
 

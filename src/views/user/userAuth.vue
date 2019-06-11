@@ -118,15 +118,6 @@ export default {
         })
     },
     methods:{
-      // getUserRoles(id){
-      //     getRoles(id)
-      //     .then((resp)=>{
-      //         this.roles = resp.data
-      //      })
-      //      .catch((e)=>{
-      //        this.roles = e.data
-      //      })
-      // },
       async detail(row){
         this.selection=null
         this.submit="del"
@@ -145,6 +136,7 @@ export default {
         this.submit="asign"
         this.userId=row.id
         this.dialogTitle='给'+row.name+'分配角色'
+        console.log(row)
         let resp = await getAllRoles()
         this.roles = resp.data
         this.dialogFormVisible=true
