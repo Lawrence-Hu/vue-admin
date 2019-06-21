@@ -5,7 +5,7 @@
             :data="data"
             border>
             <el-table-column
-            prop="name"
+            prop="user.name"
             label="姓名"
             width="200">
             </el-table-column>
@@ -28,13 +28,17 @@
             <template slot-scope="scope">
                 <el-button
                 size="medium"
-                @click="detail(scope.$index, scope.row)">详情</el-button>    
+                @click="detail(scope.$index,scope.row)">详情</el-button>    
                 <el-button
-                type="danger">驳回</el-button>
+                type="danger" @click="handleAudit(scope.row,false,scope.$index)">驳回</el-button>
             </template>      
             </el-table-column>
         </el-table>
     </template>
+         <!--分页-->
+    <el-pagination background layout="prev, pager, next" :total="pageNum"  :page-size="pageSize" 
+        @current-change="pageChange" class="pagination"></el-pagination>
+
     <el-dialog title="用户认证" :visible.sync="dialogFormVisible"  >
         <el-form :model="form" :inline="true">
             <div class="block" style="width:58%;float:right" >
@@ -45,10 +49,10 @@
                 </el-carousel>  
             </div>
             <el-form-item label="认证号" label-width="68px">
-                <el-input  :disabled="true" :value="form.userId|idFilter"></el-input>
+                <el-input  :disabled="true" :value="form.id|idFilter"></el-input>
             </el-form-item>
            <el-form-item label="姓名" label-width="68px">
-                <el-input  :disabled="true" v-model="form.name"></el-input>
+                <el-input  :disabled="true" v-model="form.user.name"></el-input>
             </el-form-item>
             <el-form-item label="身份证号">
                 <el-input :disabled="true" v-model="form.creditId"></el-input>
@@ -57,7 +61,7 @@
                 <el-input :disabled="true" v-model="form.address"></el-input>
             </el-form-item>
             <el-form-item label="信息" v-model="form.comments">
-                <el-input type="textarea" style ="width:250%;height:400%" :disabled="true" v-model="form.comments"></el-input>
+                <el-input type="textarea" style ="width:250%;height:400%"  v-model="form.comments"></el-input>
             </el-form-item>
              <el-button type="danger" @click="handleAudit(form,false)" style="float:right;margin-right:40px;margin-top:60px">驳回</el-button>
              <el-button type="success" @click="handleAudit(form,true)"  style="float:right;margin-right:20px;margin-top:60px">通过</el-button>
@@ -73,14 +77,17 @@ export default {
         dialogFormVisible:false,
         formLabelWidth: '120px',
         form: {
+            user:{},
+            comments:""
         },
+        pageNum:null,
+        pageSize:1,
+        index:null,
         data: []
       }
     },
-    beforeMount:function(){
-        allUserAuditByPages(2,1,false).then((resp)=>{
-            this.data=resp.data.records
-        })
+    created:function(){
+        this.pageChange(1)
     },
     filters:{
         idFilter:function(value){
@@ -91,19 +98,31 @@ export default {
         }
     },
     methods: {
-      detail(index, row) {
+      pageChange(curtPage){
+          allUserAuditByPages(this.pageSize,curtPage,false).then((resp)=>{
+            this.data=resp.data.records
+            this.pageNum = resp.data.pages
+        })
+      },
+      detail(index,row) {
+        this.index = index
         this.dialogFormVisible=true
         this.form=row
       },
-      async handleAudit(form,isPassed) {
+      async handleAudit(form,isPassed,index) {
+        if(index){
+             this.index = index
+         }
        //数据封装
        var params = {
         "id":form.id,
-        "user_id":form.userId,
-        "isPassed":isPassed
-        }
+        "user_id":form.user.id,
+        "isPassed":isPassed,
+        "comments":form.comments
+        }  
         try{
             await userAuthAudit(params)
+            this.data.splice(this.index,1)
             this.dialogFormVisible = false
         }catch(err){
             this.dialogFormVisible = false
@@ -112,7 +131,7 @@ export default {
     }
 }
 </script>
-<style >
+<style scoped >
   .el-input__inner{
       height:43px;
       width: 120%;
@@ -121,5 +140,10 @@ export default {
      padding:15px 15px;
      height: 80px;
  }  
+  .pagination {
+    float:right;
+    margin-right: 5%;
+    margin-top: 38%
+  }
 </style>
 

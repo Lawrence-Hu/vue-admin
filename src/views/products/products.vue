@@ -72,11 +72,8 @@
             </el-table-column>
         </el-table>
         <!--分页-->
-        <el-pagination
-          background
-          layout="prev, pager, next"
-          :total="pageNum"  class="pagination">
-        </el-pagination>
+       <el-pagination background layout="prev, pager, next" :total="pageNum"  :page-size="pageSize" 
+        @current-change="pageChange" class="pagination"></el-pagination>
         <!-- Form -->
         <el-dialog title="商品信息修改" width="850px" :visible.sync="dialogFormVisible">
         <el-form :inline="true" :model="form" >
@@ -184,20 +181,24 @@ import { allProducts,updateProducts } from "@/api/product"
         products:[],
         form:'',
         input:'',
-        pageNum:12,
+        pageNum:null,
         row:null,
+        pageSize:1,
         dialogFormVisible: false,
         formLabelWidth: '120px',
       }
     },
     beforeMount:function(){
-      console.log(this)
-        allProducts(2,1).then((resp)=>{
-          this.products = resp.data.products.records
-          this.data = resp.data
-        })
+      this.pageChange(1)
     },
     methods: {
+      pageChange(curtPage){
+          allProducts(this.pageSize,curtPage).then((resp)=>{
+          this.products = resp.data.products.records
+          this.pageNum = resp.data.products.pages
+          this.data = resp.data
+        })
+      },
       detail(row){
         this.row = row
         this.form = JSON.parse(JSON.stringify(row))

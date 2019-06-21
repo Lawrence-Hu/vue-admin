@@ -116,7 +116,7 @@ export const constantRouterMap = [
           {
             path:'/product/audit/handled',
             name:'productAuditHandled',
-            //component:() => import('@view/products/audoit'),
+            component:() => import('@/views/products/auditHandled'),
             meta:{title: '已处理',icon: 'form'}
           }
         ]

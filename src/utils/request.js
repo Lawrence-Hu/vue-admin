@@ -1,7 +1,5 @@
 import axios from 'axios'
-import { MessageBox, Message, Loading } from 'element-ui'
-import store from '@/store'
-
+import { Message, Loading } from 'element-ui'
 let loading;
 // create an axios instance
 const service = axios.create({
@@ -13,6 +11,7 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use( 
   config => {
+
     loading = Loading.service({
       lock: true,
       text: '加载中……',
@@ -23,7 +22,7 @@ service.interceptors.request.use(
     //   // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
     //   config.headers['X-Token'] = getToken()
     // }
-    Loading.service({ fullscreen: true });
+  //  Loading.service({ fullscreen: true });
     return config
   },
   error => {
@@ -48,7 +47,6 @@ service.interceptors.response.use(
   response => {
     loading.close();
    // Loading.service({ fullscreen: false });
-    console.log(response.headers)
     const res = response.data
     if (res.code !== 0) {
       Message({

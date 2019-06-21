@@ -68,7 +68,6 @@
           background
           layout="prev, pager, next"
           :total="pageNum"
-          :current-page="currentPage"
           :page-size="pageSize"
           @current-change="pageChange"
             class="pagination">
@@ -140,7 +139,7 @@
   .pagination{
     float:right;
     margin-right: 5%;
-    margin-top: 32%
+    margin-top: 35%
   }
   .el-form--inline .el-form-item{
       padding-right: 8%;
@@ -154,7 +153,6 @@
       return {
         data:[],   
         input:'',
-        currentPage:1,
         pageSize:1,
         pageNum:null,
         row:null,

@@ -1,5 +1,6 @@
 <template>
     <div>
+      
     <template>
         <el-table
             :data="users"
@@ -31,7 +32,17 @@
             </template>
             </el-table-column>
         </el-table>
-    </template>
+    </template> 
+        <!--分页-->
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="pageNum"
+        :page-size="pageSize"
+        @current-change="pageChange"
+        class="pagination">
+      </el-pagination>
+
     <el-dialog :title=dialogTitle :visible.sync="dialogFormVisible">
       <el-form :inline=true>
          <el-table
@@ -92,6 +103,7 @@
         <el-button style="margin-right:50px;margin-bottom:10px" @click="confirm()" type="primary">{{ submit=="del"?'删除所选角色':'分配所选角色'}}</el-button>
       </div>
     </el-dialog>
+
     </div>
 </template>
 <script>
@@ -106,18 +118,24 @@ export default {
         submit:null,
         dialogTitle:'',
         userId:null,
+        pageSize:1,
+        pageNum:null,
         selection:null,
         permissions:[],
         formLabelWidth: '120px',
       }
     },
     mounted:function(){
-          //获取用户
-          allUsers(2,1).then((resp)=>{
-          this.users = resp.data.users
-        })
+          this.pageChange(1) 
     },
     methods:{
+      pageChange(curtpage){
+           //获取用户
+          allUsers(this.pageSize,curtpage).then((resp)=>{
+           this.users = resp.data.records
+           this.pageNum = resp.data.pages
+        })
+      },
       async detail(row){
         this.selection=null
         this.submit="del"
@@ -180,6 +198,10 @@ export default {
     },
 }
 </script>
-<style>
-
+<style scoped>
+  .pagination {
+    float:right;
+    margin-right: 5%;
+    margin-top: 38%
+  }
 </style>

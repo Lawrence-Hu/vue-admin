@@ -41,3 +41,11 @@ export function allProducts(pageSize, currentPage) {
       }
     })
   }
+
+  export function productAuditConfirm(params){
+    return request({
+      url:'/product/audit/confirm',
+      method:'post',
+      data:params
+    })
+  }

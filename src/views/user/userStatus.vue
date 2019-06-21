@@ -70,10 +70,14 @@
             </el-table-column>
         </el-table>
         <!--分页-->
-        <el-pagination
+         <el-pagination
           background
           layout="prev, pager, next"
-          :total="pageNum"  class="pagination">
+          :total="pageNum"
+          :current-page="currentPage"
+          :page-size="pageSize"
+          @current-change="pageChange"
+            class="pagination">
         </el-pagination>
     </template>
   </div>
@@ -99,7 +103,7 @@
   .pagination{
     float:right;
     margin-right: 5%;
-    margin-top: 32%
+    margin-top: 33%
   }
   .el-form--inline .el-form-item{
       padding-right: 8%;
@@ -114,33 +118,38 @@
       return {
         data:[],   
         input:'',
-        pageNum:12,
+        pageNum:null,
+        currentPage:1,
+        pageSize:1,
         show:true,
         dialogFormVisible: false,
         form: {},
         formLabelWidth: '120px'
       }
     },
-  beforeMount:function(){
+  created:function(){
+      this.pageChange(1)
       this.$store.dispatch('GetInfo').then(() => {
       }).catch(()=>{
         this.$router.push({ path: this.redirect || '/login' })
       })
   },
-  mounted:function(){
-      frozenUsers(20,1).then((resp)=>{
+  methods: {
+    async pageChange(num){
+      try{
+        let resp = await frozenUsers(this.pageSize,num)
         this.data=resp.data.records
-      }).catch((error)=>{  
+        this.pageNum=resp.data.pages
+      }catch(error){
         if(error.code===201){
           this.$router.push('/login')
         }
-      })
+      }
     },
-    methods: {
-      detail(scope){
-        this.form=JSON.parse(JSON.stringify(scope))
-        this.dialogFormVisible=true;
-      },
+    detail(scope){
+      this.form=JSON.parse(JSON.stringify(scope))
+      this.dialogFormVisible=true;
+    },
     change(id){
       this.$confirm('确认修改用户状态?', '提示', {
           confirmButtonText: '确定',
